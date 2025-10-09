@@ -31,16 +31,20 @@ const Login = ({ onLogin }) => {
     };
 
     return (
-            <Box className="login-box">
-                <Typography component="h1" variant="h5" className="welcome-text">
-                    Welcome Back
+        <Box className="auth-shell">
+            <Box className="auth-card">
+                <Typography className="brand-badge" component="span">
+                    ChatSphere
+                </Typography>
+                <Typography component="h1" variant="h4" className="welcome-text">
+                    Welcome back, explorer
                 </Typography>
                 <Typography variant="body2" className="signin-text">
-                    Sign in to continue to your chatbot.
+                    Sign in to pick up the conversation where you left off.
                 </Typography>
-                <Box component="form" onSubmit={handleSubmit} noValidate className="login-form">
+                <Box component="form" onSubmit={handleSubmit} noValidate className="auth-form">
                     {error && (
-                        <Typography color="error" align="center" className="error-text">
+                        <Typography align="center" className="error-text">
                             {error}
                         </Typography>
                     )}
@@ -56,10 +60,10 @@ const Login = ({ onLogin }) => {
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         InputProps={{
-                            className: 'login-input',
+                            className: 'auth-input',
                         }}
                         InputLabelProps={{
-                            className: 'login-label',
+                            className: 'auth-label',
                         }}
                     />
                     <TextField
@@ -74,40 +78,43 @@ const Login = ({ onLogin }) => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         InputProps={{
-                            className: 'login-input',
+                            className: 'auth-input',
                         }}
                         InputLabelProps={{
-                            className: 'login-label',
+                            className: 'auth-label',
                         }}
                     />
-                    <Link
-                        href="#"
-                        variant="body2"
-                        className="forgot-password-link"
-                    >
-                        Forgot Password?
-                    </Link>
+                    <Box className="auth-links">
+                        <Link
+                            href="#"
+                            variant="body2"
+                            className="muted-link"
+                        >
+                            Forgot password?
+                        </Link>
+                    </Box>
                     <Button
                         type="submit"
                         fullWidth
                         variant="contained"
-                        className="login-button"
+                        className="auth-button"
                     >
-                        Log In
+                        Log in
                     </Button>
-                    <Typography variant="body2" align="center" className="signup-text-container">
-                        Don't have an account?{'  '}
+                    <Typography variant="body2" align="center" className="switch-auth-text">
+                        Don't have an account?
                         <Link
                             component="button"
                             variant="body2"
                             onClick={() => navigate('/signup')}
-                            className="signup-link"
+                            className="accent-link"
                         >
-                            Sign up
+                            Create one
                         </Link>
                     </Typography>
                 </Box>
             </Box>
+        </Box>
     );
 };
 

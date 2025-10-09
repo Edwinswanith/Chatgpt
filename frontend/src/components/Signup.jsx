@@ -41,21 +41,25 @@ const Signup = () => {
     };
 
     return (
-            <Box className="signup-box">
-                <Typography component="h1" variant="h5" className="create-account-text">
-                    Create your account
+        <Box className="auth-shell">
+            <Box className="auth-card">
+                <Typography className="brand-badge" component="span">
+                    Join ChatSphere
+                </Typography>
+                <Typography component="h1" variant="h4" className="create-account-text">
+                    Craft your intelligent workspace
                 </Typography>
                 <Typography variant="body2" className="signup-instruction-text">
-                    Sign up to get started with your chatbot.
+                    Create an account to synchronize insights across every conversation.
                 </Typography>
-                <Box component="form" onSubmit={handleSubmit} noValidate className="signup-form">
+                <Box component="form" onSubmit={handleSubmit} noValidate className="auth-form">
                     {error && (
-                        <Typography color="error" align="center" className="error-text">
+                        <Typography align="center" className="error-text">
                             {error}
                         </Typography>
                     )}
                     {success && (
-                        <Typography color="primary" align="center" className="success-text">
+                        <Typography align="center" className="success-text">
                             {success}
                         </Typography>
                     )}
@@ -71,10 +75,10 @@ const Signup = () => {
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         InputProps={{
-                            className: 'signup-input',
+                            className: 'auth-input',
                         }}
                         InputLabelProps={{
-                            className: 'signup-label',
+                            className: 'auth-label',
                         }}
                     />
                     <TextField
@@ -89,10 +93,10 @@ const Signup = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         InputProps={{
-                            className: 'signup-input',
+                            className: 'auth-input',
                         }}
                         InputLabelProps={{
-                            className: 'signup-label',
+                            className: 'auth-label',
                         }}
                     />
                     <TextField
@@ -107,33 +111,34 @@ const Signup = () => {
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         InputProps={{
-                            className: 'signup-input',
+                            className: 'auth-input',
                         }}
                         InputLabelProps={{
-                            className: 'signup-label',
+                            className: 'auth-label',
                         }}
                     />
                     <Button
                         type="submit"
                         fullWidth
                         variant="contained"
-                        className="signup-button"
+                        className="auth-button"
                     >
-                        Sign Up
+                        Sign up
                     </Button>
-                    <Typography variant="body2" align="center" className="login-link-container">
-                        Already have an account?{' '}
+                    <Typography variant="body2" align="center" className="switch-auth-text">
+                        Already part of the community?
                         <Link
                             component="button"
                             variant="body2"
                             onClick={() => navigate('/login')}
-                            className="login-link"
+                            className="accent-link"
                         >
-                            Log In
+                            Log in
                         </Link>
                     </Typography>
                 </Box>
             </Box>
+        </Box>
     );
 };
 

@@ -469,6 +469,7 @@ const Chatbot = ({ user, onLogout }) => {
                 ))}
                 <Box onMouseUp={(e) => msg.sender === 'bot' && handleTextSelect(e, index)}>
                     <ReactMarkdown
+                        className="markdown-content"
                         remarkPlugins={[remarkGfm, remarkMath]}
                         rehypePlugins={[rehypeKatex]}
                         components={{ text: TextWithHighlights }}
@@ -518,7 +519,11 @@ const Chatbot = ({ user, onLogout }) => {
               <Box
                   className={msg.sender === 'user' ? 'mini-chat-user-message-bubble' : 'mini-chat-bot-message-bubble'}
               >
-                <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeKatex]}>
+                <ReactMarkdown
+                  className="markdown-content"
+                  remarkPlugins={[remarkGfm, remarkMath]}
+                  rehypePlugins={[rehypeKatex]}
+                >
                   {msg.text}
                 </ReactMarkdown>
               </Box>
