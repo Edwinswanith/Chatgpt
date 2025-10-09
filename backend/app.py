@@ -88,7 +88,7 @@ def load_logged_in_user():
     if user_id is None:
         g.user = None
     else:
-        g.user = db.session.get(DB_User, user_id)
+        g.user = DB_User.query.get(user_id)
 
 def login_required(view):
     import functools

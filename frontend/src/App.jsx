@@ -5,7 +5,6 @@ import Loader from './components/Loader';
 import Login from './components/Login'; // Import Login component
 import Signup from './components/Signup'; // Import Signup component
 import api from './api/apiUrl'; // Import api to check login status
-import './App.css';
 
 function App() {
     const [user, setUser] = useState(null); // User state
@@ -36,21 +35,17 @@ function App() {
     };
 
     return (
-        <div className="app-shell">
-            <div className="app-backdrop app-backdrop--primary" aria-hidden="true" />
-            <div className="app-backdrop app-backdrop--secondary" aria-hidden="true" />
-            <div className="app-content">
-                <Suspense fallback={<Loader />}>
-                    <Routes>
-                        <Route
-                            path="/"
-                            element={user ? <LazyChatbot user={user} onLogout={handleLogout} /> : <Login onLogin={handleLogin} />}
-                        />
-                        <Route path="/login" element={<Login onLogin={handleLogin} />} />
-                        <Route path="/signup" element={<Signup />} />
-                    </Routes>
-                </Suspense>
-            </div>
+        <div className="font-display bg-background-dark min-h-screen">
+            <Suspense fallback={<Loader />}>
+                <Routes>
+                    <Route
+                        path="/"
+                        element={user ? <LazyChatbot user={user} onLogout={handleLogout} /> : <Login onLogin={handleLogin} />}
+                    />
+                    <Route path="/login" element={<Login onLogin={handleLogin} />} />
+                    <Route path="/signup" element={<Signup />} />
+                </Routes>
+            </Suspense>
         </div>
     );
 }

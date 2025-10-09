@@ -1,128 +1,84 @@
 /* frontend/src/components/Signup.css */
 
-.auth-shell {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: clamp(24px, 5vw, 64px);
-}
-
-.auth-card {
-    width: min(460px, 92vw);
-    background: linear-gradient(160deg, rgba(12, 18, 42, 0.88), rgba(28, 30, 60, 0.82));
-    border-radius: 28px;
-    padding: clamp(28px, 6vw, 44px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    box-shadow: 0 32px 70px rgba(6, 10, 30, 0.68);
-    backdrop-filter: blur(30px);
+.signup-box {
+    background-color: #1a2c3a; /* Slightly lighter box background */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 100vh;
 }
 
-.brand-badge {
-    align-self: flex-start;
-    padding: 6px 18px;
-    border-radius: 999px;
-    font-size: 0.9rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    background: rgba(143, 123, 255, 0.18);
-    color: var(--accent-secondary);
-    border: 1px solid rgba(143, 123, 255, 0.28);
-}
 
 .create-account-text {
-    margin: 0;
+    color: #e0e0e0; /* Light text for welcome */
     font-weight: 600;
-    font-size: clamp(1.7rem, 3.2vw, 2.3rem);
-    background: linear-gradient(120deg, #ffffff 30%, #aab8ff 60%, #78f3ff 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
 }
 
 .signup-instruction-text {
-    color: var(--text-secondary);
-    margin-bottom: 4px;
-    line-height: 1.6;
+    color: #a0a0a0; /* Slightly darker text for signin instruction */
 }
 
-.auth-form {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+.signup-form {
+    width: 50%;
+    margin-top: 20px;
 }
 
 .error-text {
-    padding: 10px 14px;
-    border-radius: 16px;
-    background: rgba(255, 107, 138, 0.12);
-    color: #ffb3c3;
+    color: #ff6b6b; /* Red color for error messages */
+    margin-bottom: 15px;
 }
 
 .success-text {
-    padding: 10px 14px;
-    border-radius: 16px;
-    background: rgba(98, 232, 255, 0.12);
-    color: #b9f4ff;
+    color: #4caf50; /* Green color for success messages */
+    margin-bottom: 15px;
 }
 
-.auth-input .MuiInputBase-input {
-    color: var(--text-primary);
+.signup-input .MuiInputBase-input {
+    color: #e0e0e0; /* Input text color */
 }
 
-.auth-input .MuiOutlinedInput-notchedOutline {
-    border-color: rgba(255, 255, 255, 0.18) !important;
+.signup-input .MuiOutlinedInput-notchedOutline {
+    border-color: #444 !important; /* Input border color */
 }
 
-.auth-input .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
-    border-color: rgba(143, 123, 255, 0.55) !important;
+.signup-input .MuiInputLabel-root {
+    color: #a0a0a0; /* Input label color */
 }
 
-.auth-label {
-    color: var(--text-muted) !important;
+.signup-input .MuiInputLabel-root.Mui-focused {
+    color: #4caf50; /* Focused input label color */
 }
 
-.auth-input .MuiInputLabel-root.Mui-focused {
-    color: var(--accent-secondary) !important;
+.signup-input .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+    border-color: #5cb85c !important; /* Hover border color */
 }
 
-.auth-button {
-    margin-top: 8px !important;
-    padding: 12px 0 !important;
-    border-radius: 18px !important;
-    font-weight: 600 !important;
-    font-size: 1rem !important;
-    background: linear-gradient(135deg, rgba(143, 123, 255, 0.95), rgba(98, 232, 255, 0.9)) !important;
-    color: #071021 !important;
-    box-shadow: 0 24px 48px rgba(95, 209, 255, 0.4) !important;
-    text-transform: none !important;
+.signup-button {
+    background-color: #4caf50 !important; /* Green signup button */
+    color: white !important;
+    padding: 12px 0;
+    font-size: 16px;
+    margin-top: 20px !important;
+    border-radius: 8px !important;
 }
 
-.auth-button:hover {
-    background: linear-gradient(135deg, rgba(143, 123, 255, 1), rgba(98, 232, 255, 1)) !important;
+.signup-button:hover {
+    background-color: #43a047 !important; /* Darker green on hover */
 }
 
-.switch-auth-text {
-    color: var(--text-muted);
-    margin-top: 4px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 6px;
+.login-link-container {
+    color: #a0a0a0; /* Gray text for "Already have an account?" */
+    margin-top: 20px !important;
 }
 
-.accent-link {
-    color: var(--accent-secondary) !important;
-    font-weight: 600;
+.login-link {
+    color: #4caf50 !important; /* Green link color */
     text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    transition: transform 0.2s ease;
 }
 
-.accent-link:hover {
-    transform: translateY(-1px);
-}
+.login-link:hover {
+    text-decoration: underline;
+} 

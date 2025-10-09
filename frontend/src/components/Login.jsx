@@ -31,20 +31,16 @@ const Login = ({ onLogin }) => {
     };
 
     return (
-        <Box className="auth-shell">
-            <Box className="auth-card">
-                <Typography className="brand-badge" component="span">
-                    ChatSphere
-                </Typography>
-                <Typography component="h1" variant="h4" className="welcome-text">
-                    Welcome back, explorer
+            <Box className="login-box">
+                <Typography component="h1" variant="h5" className="welcome-text">
+                    Welcome Back
                 </Typography>
                 <Typography variant="body2" className="signin-text">
-                    Sign in to pick up the conversation where you left off.
+                    Sign in to continue to your chatbot.
                 </Typography>
-                <Box component="form" onSubmit={handleSubmit} noValidate className="auth-form">
+                <Box component="form" onSubmit={handleSubmit} noValidate className="login-form">
                     {error && (
-                        <Typography align="center" className="error-text">
+                        <Typography color="error" align="center" className="error-text">
                             {error}
                         </Typography>
                     )}
@@ -60,10 +56,10 @@ const Login = ({ onLogin }) => {
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         InputProps={{
-                            className: 'auth-input',
+                            className: 'login-input',
                         }}
                         InputLabelProps={{
-                            className: 'auth-label',
+                            className: 'login-label',
                         }}
                     />
                     <TextField
@@ -78,43 +74,40 @@ const Login = ({ onLogin }) => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         InputProps={{
-                            className: 'auth-input',
+                            className: 'login-input',
                         }}
                         InputLabelProps={{
-                            className: 'auth-label',
+                            className: 'login-label',
                         }}
                     />
-                    <Box className="auth-links">
-                        <Link
-                            href="#"
-                            variant="body2"
-                            className="muted-link"
-                        >
-                            Forgot password?
-                        </Link>
-                    </Box>
+                    <Link
+                        href="#"
+                        variant="body2"
+                        className="forgot-password-link"
+                    >
+                        Forgot Password?
+                    </Link>
                     <Button
                         type="submit"
                         fullWidth
                         variant="contained"
-                        className="auth-button"
+                        className="login-button"
                     >
-                        Log in
+                        Log In
                     </Button>
-                    <Typography variant="body2" align="center" className="switch-auth-text">
-                        Don't have an account?
+                    <Typography variant="body2" align="center" className="signup-text-container">
+                        Don't have an account?{'  '}
                         <Link
                             component="button"
                             variant="body2"
                             onClick={() => navigate('/signup')}
-                            className="accent-link"
+                            className="signup-link"
                         >
-                            Create one
+                            Sign up
                         </Link>
                     </Typography>
                 </Box>
             </Box>
-        </Box>
     );
 };
 

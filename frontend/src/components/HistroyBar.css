@@ -1,134 +1,95 @@
 /* frontend/src/components/HistroyBar.css */
 
 .history-bar-container {
-    width: clamp(260px, 22vw, 320px);
+    width: 280px;
     flex-shrink: 0;
-    background: linear-gradient(180deg, rgba(12, 18, 40, 0.86), rgba(22, 24, 55, 0.78));
-    color: var(--text-primary);
+    background-color: #1b2625; /* Darker background for history bar */
+    color: #e0e0e0; /* Light text color */
     display: flex;
     flex-direction: column;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: clamp(22px, 2.5vw, 32px);
-    padding: clamp(18px, 2vw, 24px);
-    box-shadow: 0 30px 65px rgba(6, 10, 30, 0.65);
-    backdrop-filter: blur(28px);
-}
-
-@media (max-width: 960px) {
-    .history-bar-container {
-        width: 100%;
-        padding: 18px;
-    }
+    height: 100vh;
+    border-right: 1px solid #3a3a3a;
 }
 
 .history-bar-header {
+    padding: 16px;
+    background-color: #1b2625; /* Slightly lighter header */
+    border-bottom: 1px solid #3A4C49;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 16px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    margin-bottom: 18px;
 }
 
 .history-bar-title {
-    font-size: 1.05rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--text-secondary);
+    font-weight: bold;
 }
 
 .new-chat-button {
-    margin-bottom: 18px;
-    padding: 12px 18px;
-    background: linear-gradient(135deg, rgba(143, 123, 255, 0.85), rgba(98, 232, 255, 0.8)) !important;
-    color: #091020 !important;
-    font-weight: 600 !important;
-    border-radius: 16px !important;
-    text-transform: none !important;
-    box-shadow: 0 20px 40px rgba(90, 217, 255, 0.35);
+    margin: 16px;
+    background-color: #61A366 !important; /* Green for new chat button */
+    color: white !important;
+    font-weight: bold;
+    border-radius: 8px !important;
 }
 
 .new-chat-button:hover {
-    background: linear-gradient(135deg, rgba(143, 123, 255, 0.95), rgba(98, 232, 255, 0.92)) !important;
+    background-color: #43a047 !important; /* Darker green on hover */
 }
 
 .history-list {
     flex-grow: 1;
     overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding-right: 4px;
-}
-
-.history-list::-webkit-scrollbar {
-    width: 6px;
-}
-
-.history-list::-webkit-scrollbar-thumb {
-    background: rgba(143, 123, 255, 0.4);
-    border-radius: 999px;
+    padding: 0 16px;
 }
 
 .history-list-item {
-    border-radius: 16px;
-    transition: background 0.25s ease, transform 0.25s ease;
+    margin-bottom: 8px;
+    border-radius: 8px;
 }
 
 .history-list-item:hover {
-    background: rgba(143, 123, 255, 0.14);
-    transform: translateY(-1px);
+    background-color: #2e2e2e; /* Darker on hover */
 }
 
 .history-list-item-button {
     text-align: left;
-    color: var(--text-primary) !important;
+    color: #e0e0e0 !important;
     padding: 12px 16px;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     width: 100%;
     justify-content: flex-start;
-    border-radius: 14px !important;
-    gap: 12px;
-    backdrop-filter: blur(18px);
+    border-radius: 8px !important;
 }
 
 .history-list-item-button.Mui-selected {
-    background: rgba(143, 123, 255, 0.18) !important;
-    color: var(--accent-secondary) !important;
+    background-color: #3a3a3a !important; /* Selected item background */
+    color: #4caf50 !important; /* Green text for selected item */
 }
 
 .history-loading-spinner {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 24px;
+    padding: 20px;
 }
 
 .history-bar-footer {
-    padding-top: 18px;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
-    margin-top: 18px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    padding: 16px;
+    border-top: 1px solid #50625a;
+    background-color: #1b2625;
 }
 
 .logout-button {
-    background: linear-gradient(135deg, rgba(255, 107, 138, 0.92), rgba(255, 161, 130, 0.88)) !important;
-    color: #1a0f1f !important;
-    font-weight: 600 !important;
-    border-radius: 14px !important;
-    text-transform: none !important;
-    box-shadow: 0 18px 36px rgba(255, 136, 156, 0.32);
+    background-color: #dc3545 !important; /* Red for logout button */
+    color: white !important;
+    font-weight: bold;
+    border-radius: 8px !important;
 }
 
 .logout-button:hover {
-    background: linear-gradient(135deg, rgba(255, 107, 138, 1), rgba(255, 161, 130, 0.98)) !important;
+    background-color: #c82333 !important; /* Darker red on hover */
 }
 
-.refresh-button {
-    color: var(--accent-secondary) !important;
-    background: rgba(85, 224, 255, 0.12);
-    border-radius: 12px;
-    padding: 8px;
+.refresh-button{
+    color: #4caf50;
 }

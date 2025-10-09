@@ -1,68 +1,40 @@
-/* Global application shell */
+/* No custom CSS needed for general layout as MUI handles it. */
 
-.app-shell {
-  position: relative;
-  min-height: 100vh;
-  overflow: hidden;
+/* Adjustments for ReactMarkdown rendering */
+.chat-message.bot .message-content ul,
+.chat-message.bot .message-content ol {
+  margin-left: 20px;
+  color: #e0e0e0; /* Light gray text for dark background */
 }
 
-.app-backdrop {
-  position: absolute;
-  inset: -25%;
-  filter: blur(120px);
-  opacity: 0.7;
-  transform: scale(1.1);
-  pointer-events: none;
-}
-
-.app-backdrop--primary {
-  background: radial-gradient(circle at 20% 20%, rgba(129, 111, 255, 0.85), transparent 60%),
-    radial-gradient(circle at 80% 0%, rgba(45, 207, 255, 0.65), transparent 55%);
-}
-
-.app-backdrop--secondary {
-  background: radial-gradient(circle at 10% 90%, rgba(255, 140, 114, 0.7), transparent 55%),
-    radial-gradient(circle at 75% 85%, rgba(57, 255, 169, 0.5), transparent 45%);
-  mix-blend-mode: screen;
-}
-
-.app-content {
-  position: relative;
-  z-index: 1;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Markdown defaults inside the chat */
-.markdown-content ul,
-.markdown-content ol {
-  margin-left: 1.2rem;
-  color: #f6f8ff;
-}
-
-.markdown-content pre {
-  background: rgba(12, 20, 39, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
-  padding: 1rem;
+.chat-message.bot .message-content pre {
+  background-color: #3a3a3a; /* Darker background for code blocks */
+  padding: 10px;
+  border-radius: 5px;
   overflow-x: auto;
-  color: #f1f4ff;
-  box-shadow: 0 20px 45px rgba(6, 12, 34, 0.4);
+  color: #e0e0e0; /* Light gray text for dark background */
 }
 
-.markdown-content code {
-  font-family: 'JetBrains Mono', 'Fira Code', monospace;
-  color: #98f5ff;
+.chat-message.bot .message-content code {
+  font-family: 'monospace';
+  color: #e0e0e0; /* Light gray text for dark background */
+}
+
+/* Additional styles for loading and error screens if they are not entirely MUI-based */
+.main-layout.loading-screen,
+.main-layout.error-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5em;
+  color: #e0e0e0; /* Light gray text for dark background */
+}
+
+.main-layout.error-screen {
+  color: #ff8a80; /* A soft red for errors, suitable for dark background */
 }
 
 .highlight {
-  background: rgba(148, 181, 255, 0.28);
-  border-radius: 6px;
+  background-color: #5b799b; /* A darker blue for highlights */
   cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-.highlight:hover {
-  background: rgba(148, 181, 255, 0.45);
 }
