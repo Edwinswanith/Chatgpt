@@ -38,6 +38,7 @@ import './Chatbot.css'; // Import Chatbot.css
 const escapeRegExp = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 const TEMP_STYLE = {
+<<<<<<< HEAD
   backgroundColor: '#5b799b',
   color: '#e0e0e0',
   borderRadius: '4px',
@@ -54,6 +55,24 @@ const HIGHLIGHT_GREEN_STYLE = {
   color: '#006400',
   borderRadius: '4px',
   padding: '0 2px',
+=======
+  backgroundColor: 'rgba(129, 140, 248, 0.25)',
+  color: '#312e81',
+  borderRadius: '6px',
+  padding: '0 4px',
+};
+const HIGHLIGHT_BLUE_STYLE = {
+  backgroundColor: 'rgba(96, 165, 250, 0.25)',
+  color: '#1d4ed8',
+  borderRadius: '6px',
+  padding: '0 4px',
+};
+const HIGHLIGHT_GREEN_STYLE = {
+  backgroundColor: 'rgba(110, 231, 183, 0.25)',
+  color: '#047857',
+  borderRadius: '6px',
+  padding: '0 4px',
+>>>>>>> 182dae9 (Update)
 };
 const MIN_SELECT_LEN = 2;
 
@@ -527,7 +546,11 @@ const Chatbot = ({ user, onLogout }) => {
           {miniChatLoading && (
                         <Box className="mini-chat-loader-box">
                             <Box className="mini-chat-loader-bubble">
+<<<<<<< HEAD
                 <CircularProgress size={16} sx={{ color: '#8cafff', mr: 1 }} />
+=======
+                <CircularProgress size={16} sx={{ color: '#6c7dff', mr: 1 }} />
+>>>>>>> 182dae9 (Update)
                 Typing...
               </Box>
             </Box>

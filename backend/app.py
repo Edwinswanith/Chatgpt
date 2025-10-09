@@ -17,11 +17,19 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY') or os.environ.get('SECRET_KEY', 'supersecretkey') # Secret key for session management
+<<<<<<< HEAD
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 app.config['SESSION_COOKIE_SECURE'] = True
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 CORS(app, resources={r"/*":{
     "origins": ["http://localhost:5173", "https://6h82fbwn-5173.inc1.devtunnels.ms", "https://6h82fbwn-5000.inc1.devtunnels.ms"],
+=======
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['SESSION_COOKIE_SECURE'] = False  # Set to False for local development (HTTP)
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+CORS(app, resources={r"/*":{
+    "origins": ["http://localhost:5173", "http://localhost:5000", "http://127.0.0.1:5173"],
+>>>>>>> 182dae9 (Update)
     "methods": ["GET", "POST", "DELETE", "PUT", "OPTIONS"],
     "allow_headers": ["Content-Type", "Authorization"],
     "supports_credentials": True
@@ -82,6 +90,16 @@ def logout():
     g.user = None
     return jsonify({'message': 'Logged out successfully'}), 200
 
+<<<<<<< HEAD
+=======
+@app.route('/check_session', methods=['GET'])
+def check_session():
+    if g.user:
+        return jsonify({'authenticated': True, 'username': g.user.username}), 200
+    else:
+        return jsonify({'authenticated': False}), 401
+
+>>>>>>> 182dae9 (Update)
 @app.before_request
 def load_logged_in_user():
     user_id = session.get('user_id')

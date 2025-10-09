@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /* No custom CSS needed for general layout as MUI handles it. */
 
 /* Adjustments for ReactMarkdown rendering */
@@ -21,12 +22,37 @@
 }
 
 /* Additional styles for loading and error screens if they are not entirely MUI-based */
+=======
+/* Premium light theme adjustments for markdown content */
+
+.chat-message.bot .message-content ul,
+.chat-message.bot .message-content ol {
+  margin-left: 20px;
+  color: #1f2937;
+}
+
+.chat-message.bot .message-content pre {
+  background: linear-gradient(135deg, #f3f5ff 0%, #eef7ff 100%);
+  padding: 14px;
+  border-radius: 14px;
+  overflow-x: auto;
+  color: #1f2937;
+  box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.08);
+}
+
+.chat-message.bot .message-content code {
+  font-family: 'Fira Code', 'Source Code Pro', monospace;
+  color: #4338ca;
+}
+
+>>>>>>> 182dae9 (Update)
 .main-layout.loading-screen,
 .main-layout.error-screen {
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 1.5em;
+<<<<<<< HEAD
   color: #e0e0e0; /* Light gray text for dark background */
 }
 
@@ -36,5 +62,17 @@
 
 .highlight {
   background-color: #5b799b; /* A darker blue for highlights */
+=======
+  color: #1f2937;
+}
+
+.main-layout.error-screen {
+  color: #f97316;
+}
+
+.highlight {
+  background: rgba(129, 140, 248, 0.28);
+  border-radius: 6px;
+>>>>>>> 182dae9 (Update)
   cursor: pointer;
 }

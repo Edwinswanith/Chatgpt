@@ -11,10 +11,33 @@ function App() {
     const navigate = useNavigate();
 
     useEffect(() => {
+<<<<<<< HEAD
         // Check for user in localStorage on initial load
         const storedUser = localStorage.getItem('user');
         if (storedUser) {
             setUser(JSON.parse(storedUser));
+=======
+        // Check for user in localStorage and validate session
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+            // Validate session with backend
+            api.get('/check_session')
+                .then(response => {
+                    if (response.data.authenticated) {
+                        setUser(JSON.parse(storedUser));
+                    } else {
+                        // Session expired, clear localStorage
+                        localStorage.removeItem('user');
+                        setUser(null);
+                    }
+                })
+                .catch(error => {
+                    // Session invalid or server error, clear localStorage
+                    console.error('Session validation failed:', error);
+                    localStorage.removeItem('user');
+                    setUser(null);
+                });
+>>>>>>> 182dae9 (Update)
         }
     }, []);
 

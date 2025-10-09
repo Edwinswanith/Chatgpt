@@ -1,6 +1,9 @@
 Flask-SQLAlchemy==3.1.1
 google-generativeai==0.8.5
+<<<<<<< HEAD
 here==2.0.0
+=======
+>>>>>>> 182dae9 (Update)
 SQLAlchemy==2.0.30
 Werkzeug==3.0.3
 PyPDF2==3.0.1
