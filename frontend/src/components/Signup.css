@@ -1,84 +1,134 @@
 /* frontend/src/components/Signup.css */
 
 .signup-box {
-    background-color: #1a2c3a; /* Slightly lighter box background */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    position: relative;
+    background: linear-gradient(135deg, #f4f7ff 0%, #eef6ff 55%, #f7fff6 100%);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 100%;
     min-height: 100vh;
+    padding: 60px 20px;
+    gap: 18px;
+    overflow: hidden;
 }
 
+.signup-box::before,
+.signup-box::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.45;
+    z-index: 0;
+}
+
+.signup-box::before {
+    width: 440px;
+    height: 440px;
+    top: -150px;
+    left: -160px;
+    background: radial-gradient(circle at center, rgba(108, 125, 255, 0.32), transparent 65%);
+}
+
+.signup-box::after {
+    width: 360px;
+    height: 360px;
+    bottom: -140px;
+    right: -120px;
+    background: radial-gradient(circle at center, rgba(90, 207, 255, 0.32), transparent 65%);
+}
+
+.create-account-text,
+.signup-instruction-text,
+.signup-form {
+    width: min(440px, 100%);
+    z-index: 1;
+}
 
 .create-account-text {
-    color: #e0e0e0; /* Light text for welcome */
+    color: #0f172a;
     font-weight: 600;
+    text-align: center;
 }
 
 .signup-instruction-text {
-    color: #a0a0a0; /* Slightly darker text for signin instruction */
+    color: #475569;
+    text-align: center;
 }
 
 .signup-form {
-    width: 50%;
-    margin-top: 20px;
+    margin-top: 12px;
+    background: rgba(255, 255, 255, 0.92);
+    border-radius: 26px;
+    padding: 32px;
+    box-shadow: 0 28px 60px rgba(15, 23, 42, 0.12);
+    backdrop-filter: blur(12px);
 }
 
 .error-text {
-    color: #ff6b6b; /* Red color for error messages */
-    margin-bottom: 15px;
+    color: #ef4444;
+    margin-bottom: 12px;
 }
 
 .success-text {
-    color: #4caf50; /* Green color for success messages */
-    margin-bottom: 15px;
+    color: #10b981;
+    margin-bottom: 12px;
 }
 
 .signup-input .MuiInputBase-input {
-    color: #e0e0e0; /* Input text color */
+    color: #0f172a;
 }
 
 .signup-input .MuiOutlinedInput-notchedOutline {
-    border-color: #444 !important; /* Input border color */
-}
-
-.signup-input .MuiInputLabel-root {
-    color: #a0a0a0; /* Input label color */
-}
-
-.signup-input .MuiInputLabel-root.Mui-focused {
-    color: #4caf50; /* Focused input label color */
+    border-color: rgba(99, 102, 241, 0.32) !important;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .signup-input .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
-    border-color: #5cb85c !important; /* Hover border color */
+    border-color: rgba(99, 102, 241, 0.6) !important;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+}
+
+.signup-input .MuiInputLabel-root {
+    color: #64748b;
+}
+
+.signup-input .MuiInputLabel-root.Mui-focused {
+    color: #6366f1;
 }
 
 .signup-button {
-    background-color: #4caf50 !important; /* Green signup button */
+    background: linear-gradient(135deg, #6c7dff 0%, #5ab0ff 100%) !important;
     color: white !important;
-    padding: 12px 0;
-    font-size: 16px;
-    margin-top: 20px !important;
-    border-radius: 8px !important;
+    padding: 14px 0;
+    font-size: 1rem;
+    margin-top: 24px !important;
+    border-radius: 999px !important;
+    box-shadow: 0 16px 34px rgba(100, 126, 255, 0.35) !important;
 }
 
 .signup-button:hover {
-    background-color: #43a047 !important; /* Darker green on hover */
+    background: linear-gradient(135deg, #5f6df7 0%, #4f9dff 100%) !important;
 }
 
 .login-link-container {
-    color: #a0a0a0; /* Gray text for "Already have an account?" */
-    margin-top: 20px !important;
+    color: #475569;
+    margin-top: 24px !important;
 }
 
 .login-link {
-    color: #4caf50 !important; /* Green link color */
+    color: #4f46e5 !important;
     text-decoration: none;
+    font-weight: 500;
 }
 
 .login-link:hover {
     text-decoration: underline;
-} 
+}
+
+@media (max-width: 600px) {
+    .signup-form {
+        padding: 24px;
+    }
+}
