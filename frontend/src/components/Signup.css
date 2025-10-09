@@ -1,0 +1,84 @@
+/* frontend/src/components/Signup.css */
+
+.signup-box {
+    background-color: #1a2c3a; /* Slightly lighter box background */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 100vh;
+}
+
+
+.create-account-text {
+    color: #e0e0e0; /* Light text for welcome */
+    font-weight: 600;
+}
+
+.signup-instruction-text {
+    color: #a0a0a0; /* Slightly darker text for signin instruction */
+}
+
+.signup-form {
+    width: 50%;
+    margin-top: 20px;
+}
+
+.error-text {
+    color: #ff6b6b; /* Red color for error messages */
+    margin-bottom: 15px;
+}
+
+.success-text {
+    color: #4caf50; /* Green color for success messages */
+    margin-bottom: 15px;
+}
+
+.signup-input .MuiInputBase-input {
+    color: #e0e0e0; /* Input text color */
+}
+
+.signup-input .MuiOutlinedInput-notchedOutline {
+    border-color: #444 !important; /* Input border color */
+}
+
+.signup-input .MuiInputLabel-root {
+    color: #a0a0a0; /* Input label color */
+}
+
+.signup-input .MuiInputLabel-root.Mui-focused {
+    color: #4caf50; /* Focused input label color */
+}
+
+.signup-input .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+    border-color: #5cb85c !important; /* Hover border color */
+}
+
+.signup-button {
+    background-color: #4caf50 !important; /* Green signup button */
+    color: white !important;
+    padding: 12px 0;
+    font-size: 16px;
+    margin-top: 20px !important;
+    border-radius: 8px !important;
+}
+
+.signup-button:hover {
+    background-color: #43a047 !important; /* Darker green on hover */
+}
+
+.login-link-container {
+    color: #a0a0a0; /* Gray text for "Already have an account?" */
+    margin-top: 20px !important;
+}
+
+.login-link {
+    color: #4caf50 !important; /* Green link color */
+    text-decoration: none;
+}
+
+.login-link:hover {
+    text-decoration: underline;
+} 

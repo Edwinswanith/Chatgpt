@@ -1,0 +1,40 @@
+/* No custom CSS needed for general layout as MUI handles it. */
+
+/* Adjustments for ReactMarkdown rendering */
+.chat-message.bot .message-content ul,
+.chat-message.bot .message-content ol {
+  margin-left: 20px;
+  color: #e0e0e0; /* Light gray text for dark background */
+}
+
+.chat-message.bot .message-content pre {
+  background-color: #3a3a3a; /* Darker background for code blocks */
+  padding: 10px;
+  border-radius: 5px;
+  overflow-x: auto;
+  color: #e0e0e0; /* Light gray text for dark background */
+}
+
+.chat-message.bot .message-content code {
+  font-family: 'monospace';
+  color: #e0e0e0; /* Light gray text for dark background */
+}
+
+/* Additional styles for loading and error screens if they are not entirely MUI-based */
+.main-layout.loading-screen,
+.main-layout.error-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5em;
+  color: #e0e0e0; /* Light gray text for dark background */
+}
+
+.main-layout.error-screen {
+  color: #ff8a80; /* A soft red for errors, suitable for dark background */
+}
+
+.highlight {
+  background-color: #5b799b; /* A darker blue for highlights */
+  cursor: pointer;
+}

@@ -1,0 +1,89 @@
+/* frontend/src/components/Login.css */
+
+.login-box {
+    background-color: #1a2c3a; /* Slightly lighter box background */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center content vertically */
+    align-items: center;    /* Center content horizontally */
+    width: 100%;
+    min-height: 100vh;
+}
+
+.login-logo {
+    width: 80px; /* Adjust as needed */
+    height: 80px;
+    margin-bottom: 20px;
+}
+
+.welcome-text {
+    color: #e0e0e0; /* Light text for welcome */
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.signin-text {
+    color: #a0a0a0; /* Slightly darker text for signin instruction */
+    margin-bottom: 30px;
+}
+
+.login-form {
+    width: 50%;
+    margin-top: 20px;
+}
+
+.error-text {
+    color: #ff6b6b; /* Red color for error messages */
+    margin-bottom: 15px;
+}
+
+.login-input .MuiInputBase-input {
+    color: #e0e0e0; /* Input text color */
+}
+
+.login-input .MuiOutlinedInput-notchedOutline {
+    border-color: #444 !important; /* Input border color */
+}
+
+.login-input .MuiInputLabel-root {
+    color: #a0a0a0; /* Input label color */
+}
+
+.login-input .MuiInputLabel-root.Mui-focused {
+    color: #4caf50; /* Focused input label color */
+}
+
+.login-input .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
+    border-color: #5cb85c !important; /* Hover border color */
+}
+
+.login-button {
+    background-color: #4caf50 !important; /* Green login button */
+    color: white !important;
+    padding: 12px 0;
+    font-size: 16px;
+    margin-top: 20px !important;
+    border-radius: 8px !important;
+}
+
+.login-button:hover {
+    background-color: #43a047 !important; /* Darker green on hover */
+}
+
+.forgot-password-link,
+.signup-link {
+    color: #4caf50 !important; /* Green link color */
+    text-decoration: none;
+    margin-top: 10px;
+}
+
+.forgot-password-link:hover,
+.signup-link:hover {
+    text-decoration: underline;
+}
+
+.signup-text-container {
+    color: #a0a0a0; /* Gray text for "Don't have an account?" */
+    margin-top: 20px !important;
+} 
