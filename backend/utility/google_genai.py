@@ -32,12 +32,16 @@ def prepare_chat_input_parts(user_message_text, images_data):
         for image_base64 in images_data:
             header, encoded = image_base64.split(",", 1)
             image_bytes = base64.b64decode(encoded)
-            model_input_parts.append({'mime_type': header.split(":")[1].split(";")[0], 'data': image_bytes})
+            model_input_parts.append({
+                'mime_type': header.split(":")[1].split(";")[0],
+                'data': image_bytes,
+            })
 
         if not user_message_text:
-            user_message_text = "Analyze the provided content." # Add a default prompt if only files are provided
+            # Add a default prompt if only files are provided
+            user_message_text = "Analyze the provided content."
 
     if user_message_text:
         model_input_parts.append(user_message_text)
-    
+
     return model_input_parts, is_visible_wanted
