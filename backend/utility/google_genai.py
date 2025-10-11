@@ -13,10 +13,11 @@ def generate_text_from_genai(prompt, model_name='gemini-2.5-pro'):
     response = model.generate_content(prompt)
     return response.text
 
-def generate_chat_content_stream(model_input_parts, is_visible_wanted):
+def generate_chat_content_stream(history, is_visible_wanted):
     model_name = 'gemini-2.5-pro' if is_visible_wanted else 'gemini-2.5-flash-lite'
     model = genai.GenerativeModel(model_name)
-    return model.generate_content(model_input_parts, stream=True)
+    chat_session = model.start_chat(history=history[:-1]) # Pass all but the last message as history
+    return chat_session.send_message(history[-1]["parts"], stream=True) # Send the last message as the current message
 
 def generate_mini_chat_content_stream(query, chat_history_for_model):
     model = genai.GenerativeModel('gemini-2.5-pro')

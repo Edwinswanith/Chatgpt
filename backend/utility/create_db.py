@@ -56,4 +56,27 @@ def create_database(db: SQLAlchemy):
                 'timestamp': self.timestamp.isoformat()
             }
 
-    return Message, User, HighlightedPhrase
+    class MiniChatConversation(db.Model):
+        id = db.Column(db.Integer, primary_key=True)
+        user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+        user = db.relationship('User', backref='mini_chat_conversations')
+        session_id = db.Column(db.String(36), nullable=False)
+        context_id = db.Column(db.String(36), unique=True, nullable=False)
+        phrase = db.Column(db.String(500), nullable=False)
+        messages = db.Column(db.JSON, nullable=False)  # [{ sender, text }]
+        created_at = db.Column(db.DateTime, default=datetime.utcnow)
+        updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+        def to_dict(self):
+            return {
+                'id': self.id,
+                'user_id': self.user_id,
+                'session_id': self.session_id,
+                'context_id': self.context_id,
+                'phrase': self.phrase,
+                'messages': self.messages,
+                'created_at': self.created_at.isoformat() if self.created_at else None,
+                'updated_at': self.updated_at.isoformat() if self.updated_at else None,
+            }
+
+    return Message, User, HighlightedPhrase, MiniChatConversation

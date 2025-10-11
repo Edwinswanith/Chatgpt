@@ -1,13 +1,46 @@
 /* frontend/src/components/Signup.css */
 
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.45;
+    }
+    50% {
+        opacity: 0.65;
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
 .signup-box {
 <<<<<<< HEAD
     background-color: #1a2c3a; /* Slightly lighter box background */
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 =======
     position: relative;
+<<<<<<< HEAD
     background: linear-gradient(135deg, #f4f7ff 0%, #eef6ff 55%, #f7fff6 100%);
 >>>>>>> 182dae9 (Update)
+=======
+    background: #1A3635;
+>>>>>>> 2cb9e50 (Added verification feature)
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -103,7 +136,8 @@
     height: 440px;
     top: -150px;
     left: -160px;
-    background: radial-gradient(circle at center, rgba(108, 125, 255, 0.32), transparent 65%);
+    background: radial-gradient(circle at center, rgba(52, 211, 153, 0.15), transparent 65%);
+    animation: pulse 4s ease-in-out infinite, float 6s ease-in-out infinite;
 }
 
 .signup-box::after {
@@ -111,7 +145,8 @@
     height: 360px;
     bottom: -140px;
     right: -120px;
-    background: radial-gradient(circle at center, rgba(90, 207, 255, 0.32), transparent 65%);
+    background: radial-gradient(circle at center, rgba(52, 211, 153, 0.1), transparent 65%);
+    animation: pulse 4s ease-in-out infinite 2s, float 6s ease-in-out infinite 3s;
 }
 
 .create-account-text,
@@ -122,23 +157,32 @@
 }
 
 .create-account-text {
-    color: #0f172a;
+    color: #E0E0E0;
     font-weight: 600;
     text-align: center;
+    animation: fadeInUp 0.6s ease-out;
 }
 
 .signup-instruction-text {
-    color: #475569;
+    color: #B0B0B0;
     text-align: center;
+    animation: fadeInUp 0.6s ease-out 0.1s backwards;
 }
 
 .signup-form {
     margin-top: 12px;
-    background: rgba(255, 255, 255, 0.92);
-    border-radius: 26px;
+    background: #213F3E;
+    border-radius: 16px;
     padding: 32px;
-    box-shadow: 0 28px 60px rgba(15, 23, 42, 0.12);
-    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    animation: fadeInUp 0.6s ease-out 0.2s backwards;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #2D5C5B;
+}
+
+.signup-form:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
 }
 
 .error-text {
@@ -152,50 +196,65 @@
 }
 
 .signup-input .MuiInputBase-input {
-    color: #0f172a;
+    color: #E0E0E0;
 }
 
 .signup-input .MuiOutlinedInput-notchedOutline {
-    border-color: rgba(99, 102, 241, 0.32) !important;
+    border-color: #2D5C5B !important;
     transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .signup-input .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
-    border-color: rgba(99, 102, 241, 0.6) !important;
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+    border-color: #34D399 !important;
+    box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.2);
 }
 
 .signup-input .MuiInputLabel-root {
-    color: #64748b;
+    color: #B0B0B0;
 }
 
 .signup-input .MuiInputLabel-root.Mui-focused {
-    color: #6366f1;
+    color: #34D399;
 }
 
 .signup-button {
-    background: linear-gradient(135deg, #6c7dff 0%, #5ab0ff 100%) !important;
+    background: #34D399 !important;
     color: white !important;
     padding: 14px 0;
     font-size: 1rem;
     margin-top: 24px !important;
-    border-radius: 999px !important;
-    box-shadow: 0 16px 34px rgba(100, 126, 255, 0.35) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 16px rgba(52, 211, 153, 0.4) !important;
+    transition: all 0.3s ease !important;
+    transform: translateY(0);
 }
 
-.signup-button:hover {
-    background: linear-gradient(135deg, #5f6df7 0%, #4f9dff 100%) !important;
+.signup-button:hover:not(:disabled) {
+    background: #10B981 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(52, 211, 153, 0.5) !important;
+}
+
+.signup-button:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 12px rgba(52, 211, 153, 0.3) !important;
+}
+
+.signup-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
 }
 
 .login-link-container {
-    color: #475569;
+    color: #B0B0B0;
     margin-top: 24px !important;
 }
 
 .login-link {
-    color: #4f46e5 !important;
+    color: #34D399 !important;
     text-decoration: none;
     font-weight: 500;
+<<<<<<< HEAD
 >>>>>>> 182dae9 (Update)
 }
 
@@ -204,6 +263,30 @@
 <<<<<<< HEAD
 } 
 =======
+=======
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.login-link:hover {
+    color: #10B981 !important;
+    transform: translateX(3px);
+}
+
+.login-link::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -2px;
+    left: 0;
+    background-color: #34D399;
+    transition: width 0.3s ease;
+}
+
+.login-link:hover::after {
+    width: 100%;
+>>>>>>> 2cb9e50 (Added verification feature)
 }
 
 @media (max-width: 600px) {

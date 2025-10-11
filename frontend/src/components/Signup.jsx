@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/apiUrl';
+import { toast } from 'react-toastify';
 import {
     Container,
     Box,
@@ -8,57 +9,73 @@ import {
     TextField,
     Button,
     Link,
+    CircularProgress,
 } from '@mui/material';
 import './Signup.css'; // Import the new CSS file
 
 const Signup = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState(''); // New state for confirm password
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError('');
-        setSuccess('');
 
-        if (password !== confirmPassword) {
-            setError('Passwords do not match');
+        if (!username || !password || !confirmPassword) {
+            toast.error('Please fill in all fields', {
+                position: "top-right",
+                autoClose: 3000,
+            });
             return;
         }
 
+        if (password !== confirmPassword) {
+            toast.error('Passwords do not match', {
+                position: "top-right",
+                autoClose: 3000,
+            });
+            return;
+        }
+
+        if (password.length < 6) {
+            toast.warning('Password should be at least 6 characters', {
+                position: "top-right",
+                autoClose: 3000,
+            });
+            return;
+        }
+
+        setLoading(true);
         try {
             const response = await api.post('/register', { username, password });
             if (response.status === 201) {
-                setSuccess('Registration successful! Please log in.');
+                toast.success('Registration successful! Redirecting to login... ✨', {
+                    position: "top-right",
+                    autoClose: 2000,
+                });
                 setTimeout(() => navigate('/login'), 2000);
             }
         } catch (err) {
-            setError(err.response?.data?.error || 'Registration failed');
+            toast.error(err.response?.data?.error || 'Registration failed. Please try again.', {
+                position: "top-right",
+                autoClose: 4000,
+            });
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
             <Box className="signup-box">
                 <Typography component="h1" variant="h5" className="create-account-text">
-                    Create your account
+                    Join Stellar AI
                 </Typography>
                 <Typography variant="body2" className="signup-instruction-text">
                     Sign up to get started with your chatbot.
                 </Typography>
                 <Box component="form" onSubmit={handleSubmit} noValidate className="signup-form">
-                    {error && (
-                        <Typography color="error" align="center" className="error-text">
-                            {error}
-                        </Typography>
-                    )}
-                    {success && (
-                        <Typography color="primary" align="center" className="success-text">
-                            {success}
-                        </Typography>
-                    )}
                     <TextField
                         margin="normal"
                         required
@@ -118,8 +135,16 @@ const Signup = () => {
                         fullWidth
                         variant="contained"
                         className="signup-button"
+                        disabled={loading}
                     >
-                        Sign Up
+                        {loading ? (
+                            <>
+                                <CircularProgress size={20} sx={{ mr: 1, color: 'white' }} />
+                                Creating account...
+                            </>
+                        ) : (
+                            'Sign Up'
+                        )}
                     </Button>
                     <Typography variant="body2" align="center" className="login-link-container">
                         Already have an account?{' '}

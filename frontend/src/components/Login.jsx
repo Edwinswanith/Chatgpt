@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api/apiUrl';
+import { toast } from 'react-toastify';
 import {
     Container,
     Box,
@@ -8,42 +9,69 @@ import {
     TextField,
     Button,
     Link,
+    CircularProgress,
 } from '@mui/material';
 import './Login.css'; // Import the new CSS file
 
 const Login = ({ onLogin }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        if (!username || !password) {
+            toast.error('Please enter both username and password', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
+            return;
+        }
+
+        setLoading(true);
         try {
             const response = await api.post('/login', { username, password });
             if (response.status === 200) {
-                onLogin(response.data.username); // Pass username to parent component
-                navigate('/'); // Redirect to chat page
+                toast.success(`Welcome back, ${response.data.username}! 🎉`, {
+                    position: "top-right",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
+                onLogin(response.data.username);
+                setTimeout(() => navigate('/'), 1000);
             }
         } catch (err) {
-            setError(err.response?.data?.error || 'Login failed');
+            toast.error(err.response?.data?.error || 'Login failed. Please try again.', {
+                position: "top-right",
+                autoClose: 4000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
             <Box className="login-box">
                 <Typography component="h1" variant="h5" className="welcome-text">
-                    Welcome Back
+                    Welcome to Stellar AI
                 </Typography>
                 <Typography variant="body2" className="signin-text">
                     Sign in to continue to your chatbot.
                 </Typography>
                 <Box component="form" onSubmit={handleSubmit} noValidate className="login-form">
-                    {error && (
-                        <Typography color="error" align="center" className="error-text">
-                            {error}
-                        </Typography>
-                    )}
                     <TextField
                         margin="normal"
                         required
@@ -92,8 +120,16 @@ const Login = ({ onLogin }) => {
                         fullWidth
                         variant="contained"
                         className="login-button"
+                        disabled={loading}
                     >
-                        Log In
+                        {loading ? (
+                            <>
+                                <CircularProgress size={20} sx={{ mr: 1, color: 'white' }} />
+                                Logging in...
+                            </>
+                        ) : (
+                            'Log In'
+                        )}
                     </Button>
                     <Typography variant="body2" align="center" className="signup-text-container">
                         Don't have an account?{'  '}

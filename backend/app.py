@@ -11,6 +11,8 @@ import base64 # Import base64 for decoding image data
 from PyPDF2 import PdfReader # Import PdfReader for PDF processing
 from utility.create_db import create_database
 from utility.google_genai import generate_text_from_genai, configure_genai, generate_chat_content_stream, generate_mini_chat_content_stream, prepare_chat_input_parts
+from utility.chat_memory import get_chat_history, append_to_chat_history
+from utility.serper import search_serper, SerperConfigurationError
 from werkzeug.security import generate_password_hash, check_password_hash # Import security utilities
 
 load_dotenv()
@@ -40,7 +42,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///chat.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-DB_Message, DB_User, DB_HighlightedPhrase = create_database(db) # create_database now returns Message, User, and HighlightedPhrase models
+DB_Message, DB_User, DB_HighlightedPhrase, DB_MiniChatConversation = create_database(db) # create_database now returns models for chats, users, highlights, and mini-chat archives
 
 # Configure Generative AI
 configure_genai()
@@ -180,19 +182,51 @@ def chat():
 
         combined_pdf_text = ""
 
-        user_message = DB_Message(text=user_message_content, sender='user', session_id=session_id, context_type='general_chat', image_data=images_data, pdf_text_content=combined_pdf_text, user_id=g.user.id)
-        db.session.add(user_message)
-        db.session.commit()
-        db.session.refresh(g.user) # Re-bind g.user to the session after commit
+        # Retrieve existing chat history before appending the new message.
+        # This will be an empty list if no history exists for the session.
+        full_chat_history = get_chat_history(g.user.id, session_id, DB_Message, db)
+
+        # Prepare the user message for the model input, including any images
+        user_message_for_model_parts, is_visible_wanted = prepare_chat_input_parts(user_message_text, images_data)
+
+        # Add the current user message to the history for the model
+        # If there are images, the user message content is handled within prepare_chat_input_parts
+        # so we just add the text part of the message to the database.
+        if user_message_text or images_data: # Only add if there's actual content
+            append_to_chat_history(
+                g.user.id,
+                session_id,
+                'user',
+                user_message_content,
+                DB_Message,
+                db,
+                context_type='general_chat',
+                image_data=images_data,
+                pdf_text_content=combined_pdf_text,
+            )
+
+        # Construct the full history for the generative model.
+        # The model expects a list of dictionaries with 'role' and 'parts' keys.
+        # 'parts' can be a list of text strings or image dictionaries.
+        model_history = []
+        for msg in full_chat_history:
+            model_history.append({"role": msg['role'], "parts": [msg['content']]})
+        
+        # Append the current user message parts (which might include images) to the model history
+        # The role for the last message should be 'user' as it's the current turn's input.
+        if user_message_for_model_parts:
+            model_history.append({"role": "user", "parts": user_message_for_model_parts})
+        
+        # Commit the user message to the database before generating response
+        # This is already handled by append_to_chat_history
+        
+        user_id_for_bot_message = g.user.id # Capture user_id before entering the streaming context
 
         def generate_content():
             try:
-                model_input_parts, is_visible_wanted = prepare_chat_input_parts(user_message_text, images_data)
-                if not model_input_parts:
-                    current_app.logger.error("Error: No content to generate a response from.")
-                    yield "Error: No content to generate a response from."
-                    return
-                response = generate_chat_content_stream(model_input_parts, is_visible_wanted)
+                # Generate content using the full conversation history
+                # The model_input_parts are now incorporated into model_history
+                response = generate_chat_content_stream(model_history, is_visible_wanted)
                 full_bot_message_text = []
                 for chunk in response:
                     if chunk.text:
@@ -200,10 +234,17 @@ def chat():
                         yield chunk.text
                 
                 # Store the complete bot message after streaming
-                bot_message = DB_Message(text="".join(full_bot_message_text), sender='bot', session_id=session_id, context_type='general_chat', user_id=g.user.id)
+                bot_response_content = "".join(full_bot_message_text)
                 with app.app_context():
-                    db.session.add(bot_message)
-                    db.session.commit()
+                    append_to_chat_history(
+                        user_id_for_bot_message,
+                        session_id,
+                        'model',
+                        bot_response_content,
+                        DB_Message,
+                        db,
+                        context_type='general_chat',
+                    )
                     
             except Exception as e:
                 current_app.logger.error(f"Error generating content: {e}", exc_info=True)
@@ -292,6 +333,26 @@ def mini_chat():
 
     return Response(stream_with_context(generate_mini_chat_content()), mimetype='text/plain')
 
+
+@app.route('/verify_text', methods=['POST'])
+@login_required
+def verify_text():
+    payload = request.json or {}
+    selected_text = (payload.get('text') or '').strip()
+
+    if not selected_text:
+        return jsonify({'error': 'No text provided for verification'}), 400
+
+    try:
+        results = search_serper(selected_text)
+        return jsonify({'results': results}), 200
+    except SerperConfigurationError as configuration_error:
+        app.logger.error(f"Serper configuration error: {configuration_error}")
+        return jsonify({'error': str(configuration_error)}), 500
+    except Exception as exc:
+        app.logger.error(f"Failed to verify text: {exc}", exc_info=True)
+        return jsonify({'error': 'Failed to verify text'}), 500
+
 @app.route('/save_highlight', methods=['POST'])
 @login_required
 def save_highlight():
@@ -299,21 +360,112 @@ def save_highlight():
     phrase = data.get('phrase')
     context_id = data.get('context_id')
     session_id = data.get('session_id')
+    messages_payload = data.get('messages', [])
 
     if not phrase or not context_id or not session_id:
         return jsonify({'error': 'Missing phrase, context_id, or session_id'}), 400
 
+    sanitized_messages = []
+    for msg in messages_payload:
+        sender = msg.get('sender')
+        text = (msg.get('text') or '').strip()
+        if not text:
+            continue
+        normalized_sender = 'bot' if sender in ('bot', 'model') else 'user'
+        sanitized_messages.append({'sender': normalized_sender, 'text': text})
+
     existing_highlight = DB_HighlightedPhrase.query.filter_by(context_id=context_id, user_id=g.user.id).first()
-    if existing_highlight:
-        # Optionally update timestamp or other fields if needed
-        return jsonify({'message': 'Highlight already saved for this context_id'}), 200
+    conversation_record = DB_MiniChatConversation.query.filter_by(context_id=context_id, user_id=g.user.id).first()
 
-    new_highlight = DB_HighlightedPhrase(phrase=phrase, context_id=context_id, session_id=session_id, user_id=g.user.id)
-    db.session.add(new_highlight)
-    db.session.commit()
-    db.session.refresh(g.user)
+    try:
+        if existing_highlight:
+            existing_highlight.phrase = phrase
+            existing_highlight.session_id = session_id
+            response_status = 200
+            response_message = 'Highlight updated successfully'
+        else:
+            new_highlight = DB_HighlightedPhrase(
+                phrase=phrase,
+                context_id=context_id,
+                session_id=session_id,
+                user_id=g.user.id
+            )
+            db.session.add(new_highlight)
+            response_status = 201
+            response_message = 'Highlight saved successfully'
 
-    return jsonify({'message': 'Highlight saved successfully'}), 201
+        if sanitized_messages:
+            if conversation_record:
+                conversation_record.phrase = phrase
+                conversation_record.session_id = session_id
+                conversation_record.messages = sanitized_messages
+            else:
+                new_conversation = DB_MiniChatConversation(
+                    user_id=g.user.id,
+                    session_id=session_id,
+                    context_id=context_id,
+                    phrase=phrase,
+                    messages=sanitized_messages
+                )
+                db.session.add(new_conversation)
+        elif conversation_record:
+            # Update phrase even if no messages provided in this request
+            conversation_record.phrase = phrase
+            conversation_record.session_id = session_id
+
+        db.session.commit()
+        db.session.refresh(g.user)
+
+        highlight_record = DB_HighlightedPhrase.query.filter_by(context_id=context_id, user_id=g.user.id).first()
+        conversation_json = None
+        if conversation_record:
+            conversation_json = conversation_record.to_dict()
+        elif sanitized_messages:
+            conversation_record = DB_MiniChatConversation.query.filter_by(context_id=context_id, user_id=g.user.id).first()
+            if conversation_record:
+                conversation_json = conversation_record.to_dict()
+
+        response_payload = {
+            'message': response_message,
+            'highlight': highlight_record.to_dict() if highlight_record else None,
+            'conversation': conversation_json,
+        }
+        return jsonify(response_payload), response_status
+    except Exception as exc:
+        app.logger.error(f'Failed to save highlight: {exc}', exc_info=True)
+        db.session.rollback()
+        return jsonify({'error': 'Failed to save highlight'}), 500
+
+
+@app.route('/mini_chat/history/<context_id>', methods=['GET'])
+@login_required
+def get_saved_mini_chat(context_id):
+    conversation = DB_MiniChatConversation.query.filter_by(context_id=context_id, user_id=g.user.id).first()
+    if conversation:
+        return jsonify({
+            'messages': conversation.messages,
+            'phrase': conversation.phrase,
+            'session_id': conversation.session_id,
+        }), 200
+
+    messages = DB_Message.query.filter_by(
+        context_id=context_id,
+        context_type='selection_chat',
+        user_id=g.user.id
+    ).order_by(DB_Message.timestamp).all()
+
+    if messages:
+        simplified = [
+            {
+                'sender': 'bot' if msg.sender in ('bot', 'model') else 'user',
+                'text': msg.text
+            }
+            for msg in messages
+            if msg.text
+        ]
+        return jsonify({'messages': simplified}), 200
+
+    return jsonify({'messages': []}), 200
 
 
 if __name__ == '__main__':

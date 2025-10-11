@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { toast } from 'react-toastify';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import SettingsIcon from '@mui/icons-material/Settings';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
@@ -29,6 +30,10 @@ const HistroyBar = ({ startNewChat, onSelectSession, isPending, onLogout, userna
                 setSessions(response.data);
             } catch (error) {
                 console.error("Error fetching sessions:", error);
+                toast.error('Failed to load chat history', {
+                    position: "bottom-right",
+                    autoClose: 3000,
+                });
             }
         };
         fetchSessions();
@@ -36,6 +41,10 @@ const HistroyBar = ({ startNewChat, onSelectSession, isPending, onLogout, userna
 
     const refreshSessions = () => {
         setRefresh(prev => prev + 1);
+        toast.info('Refreshing chat history...', {
+            position: "bottom-right",
+            autoClose: 1500,
+        });
     }
 
     const handleDeleteSession = async (sessionIdToDelete) => {
@@ -45,9 +54,17 @@ const HistroyBar = ({ startNewChat, onSelectSession, isPending, onLogout, userna
             if (response.status !== 200) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
+            toast.success('Chat session deleted successfully!', {
+                position: "bottom-right",
+                autoClose: 2000,
+            });
             refreshSessions();
         } catch (error) {
             console.error("Error deleting session:", error);
+            toast.error('Failed to delete chat session', {
+                position: "bottom-right",
+                autoClose: 3000,
+            });
         }
     };
 

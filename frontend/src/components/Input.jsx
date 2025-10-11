@@ -74,10 +74,18 @@ const Input = ({ setInput, handleSendMessage, loading, input, files, handleFileC
             placeholder="Type your message..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
+<<<<<<< HEAD
             onKeyPress={(e) => e.key === 'Enter' && handleSendMessage(e)}
 <<<<<<< HEAD
             sx={{ input: { color: '#e0e0e0' }, '& .MuiInputBase-input::placeholder': { color: '#888', opacity: 1 } }}
 =======
+=======
+            onKeyDown={(e) => {
+                if (e.key === 'Enter' && !loading) {
+                    handleSendMessage(e);
+                }
+            }}
+>>>>>>> 2cb9e50 (Added verification feature)
             sx={{
                 input: { color: '#1f2937' },
                 '& .MuiInputBase-input::placeholder': { color: 'rgba(100, 116, 139, 0.9)', opacity: 1 }

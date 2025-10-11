@@ -1,15 +1,51 @@
 /* frontend/src/components/Chatbot.css */
 
+@keyframes slideInMessage {
+    from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInFromLeft {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
 .chatbot-root {
     display: flex;
     height: 100vh;
     width: 100vw;
+<<<<<<< HEAD
 <<<<<<< HEAD
     background: linear-gradient(to bottom, #2D403D, #1E2B29); /* Dark to light green gradient */
     color: #e0e0e0; /* Light text color */
 =======
     background: linear-gradient(135deg, #f7f9ff 0%, #eef4ff 45%, #f8fff5 100%);
     color: #1f2937;
+=======
+    background: #213F3E;
+    color: #F8FAFC;
+>>>>>>> 2cb9e50 (Added verification feature)
     font-family: 'Inter', 'Segoe UI', sans-serif;
 >>>>>>> 182dae9 (Update)
 }
@@ -22,6 +58,7 @@
 
 .chat-app-bar {
 <<<<<<< HEAD
+<<<<<<< HEAD
     background-color: #2D403D; /* Slightly lighter background for app bar */
     box-shadow: none;
     border-bottom: 1px solid #3A4C49;
@@ -31,6 +68,12 @@
     border-bottom: 1px solid rgba(120, 144, 156, 0.18);
     box-shadow: 0 18px 36px rgba(15, 23, 42, 0.08);
 >>>>>>> 182dae9 (Update)
+=======
+    background: #1A3635;
+    border-bottom: 1px solid #2D5C5B;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    color: #F8FAFC;
+>>>>>>> 2cb9e50 (Added verification feature)
 }
 
 .chat-title {
@@ -43,14 +86,25 @@
 =======
     font-weight: 600;
     letter-spacing: 0.02em;
-    color: #0f172a;
+    color: #F8FAFC;
 }
 
 .chat-avatar {
-    background: linear-gradient(135deg, #6d5dfc 0%, #57b7ff 100%);
+    background: #34D399;
     color: #ffffff;
+<<<<<<< HEAD
     box-shadow: 0 12px 28px rgba(109, 93, 252, 0.35);
 >>>>>>> 182dae9 (Update)
+=======
+    box-shadow: 0 4px 12px rgba(52, 211, 153, 0.4);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.chat-avatar:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(52, 211, 153, 0.5);
+>>>>>>> 2cb9e50 (Added verification feature)
 }
 
 .chat-messages-container {
@@ -60,9 +114,13 @@
     padding: 20px;
 =======
     padding: 28px;
+<<<<<<< HEAD
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0.55) 100%);
     backdrop-filter: blur(12px);
 >>>>>>> 182dae9 (Update)
+=======
+    background: #213F3E;
+>>>>>>> 2cb9e50 (Added verification feature)
 }
 
 .message-box {
@@ -114,27 +172,40 @@
     border-top: 1px solid #3A4C49;
 =======
     margin-bottom: 18px;
+    animation: slideInMessage 0.4s ease-out;
 }
 
 .user-message-bubble {
-    background: linear-gradient(135deg, #6c7dff 0%, #8663ff 100%);
+    background: #374151;
     color: #ffffff;
     padding: 12px 18px;
     border-radius: 18px 18px 4px 18px;
     max-width: 70%;
     word-break: break-word;
-    box-shadow: 0 18px 36px rgba(108, 125, 255, 0.35);
+    box-shadow: 0 4px 12px rgba(55, 65, 81, 0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.user-message-bubble:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(55, 65, 81, 0.4);
 }
 
 .bot-message-bubble {
-    background: rgba(255, 255, 255, 0.94);
-    color: #1f2937;
+    background: #213F3E;
+    color: lightgoldenrodyellow;
     padding: 12px 18px;
     border-radius: 18px 18px 18px 4px;
     max-width: 70%;
     word-break: break-word;
-    box-shadow: 0 18px 34px rgba(15, 23, 42, 0.08);
-    border: 1px solid rgba(99, 102, 241, 0.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border: 1px solid #2D5C5B;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bot-message-bubble:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
 }
 
 .message-image {
@@ -159,13 +230,38 @@
 
 .chat-input-area {
     padding: 20px;
+<<<<<<< HEAD
     background: rgba(255, 255, 255, 0.66);
     border-top: 1px solid rgba(148, 163, 184, 0.2);
     backdrop-filter: blur(16px);
 >>>>>>> 182dae9 (Update)
+=======
+    background: #1A3635;
+    border-top: 1px solid #2D5C5B;
+>>>>>>> 2cb9e50 (Added verification feature)
 }
 
-/* Mini-chat Popover styles */
+.mini-chat-offset-model {
+    position: fixed;
+    right: 0;
+    top: 0;
+    height: 100vh;
+    width: 380px; /* Adjust width as needed */
+    background: #1A3635;
+    border-left: 1px solid #2D5C5B;
+    box-shadow: -4px 0 12px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    animation: slideInFromRight 0.3s ease-out; /* Optional: Add an animation */
+}
+
+@keyframes slideInFromRight {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* Mini-chat Popover styles (adjusted for offset model) */
 .mini-chat-popover-box {
 <<<<<<< HEAD
     padding: 16px;
@@ -174,10 +270,11 @@
 >>>>>>> 182dae9 (Update)
     flex-grow: 1;
     overflow-y: auto;
-    max-width: 500px;
-    max-height: 600px;
+    max-width: 100%; /* Occupy full width of the offset model */
+    max-height: calc(100% - 100px); /* Adjust based on input area height */
     display: flex;
     flex-direction: column;
+<<<<<<< HEAD
 <<<<<<< HEAD
     background-color: #2D403D; /* Dark gray for popover background */
     color: #e0e0e0;
@@ -189,6 +286,14 @@
     box-shadow: 0 25px 45px rgba(15, 23, 42, 0.12);
     border: 1px solid rgba(148, 163, 184, 0.25);
 >>>>>>> 182dae9 (Update)
+=======
+    background: #213F3E;
+    color: #F8FAFC;
+    border-radius: 0; /* No border-radius for offset model */
+    box-shadow: none; /* No shadow for offset model */
+    border: none; /* No border for offset model */
+    animation: none; /* No animation needed here, handled by offset model */
+>>>>>>> 2cb9e50 (Added verification feature)
 }
 
 .mini-chat-popover-header {
@@ -217,11 +322,17 @@
 
 .mini-chat-selected-text {
     font-weight: 600;
-    color: #5b6bff;
+    color: #34D399;
 }
 
 .mini-chat-close-button {
-    color: #475569;
+    color: #B0B0B0;
+    transition: all 0.3s ease;
+}
+
+.mini-chat-close-button:hover {
+    color: #ef4444;
+    transform: rotate(90deg);
 }
 
 .mini-chat-divider {
@@ -259,25 +370,30 @@
 }
 
 .mini-chat-user-message-bubble {
-    background: linear-gradient(135deg, #6c7dff 0%, #7f92ff 100%);
+    background: #374151;
     color: #ffffff;
     border-radius: 16px 16px 4px 16px;
     padding: 8px 14px;
     max-width: 85%;
     word-break: break-word;
-    box-shadow: 0 12px 28px rgba(108, 125, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(55, 65, 81, 0.3);
 }
 
 .mini-chat-bot-message-bubble {
-    background: rgba(255, 255, 255, 0.92);
-    color: #1f2937;
+    background: #1A3635;
+    color: #F8FAFC;
     border-radius: 16px 16px 16px 4px;
     padding: 8px 14px;
     max-width: 85%;
     word-break: break-word;
+<<<<<<< HEAD
     box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
     border: 1px solid rgba(99, 102, 241, 0.08);
 >>>>>>> 182dae9 (Update)
+=======
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    border: 1px solid #2D5C5B;
+>>>>>>> 2cb9e50 (Added verification feature)
 }
 
 .mini-chat-loader-box {
@@ -350,26 +466,207 @@
 .mini-chat-send-button {
     padding: 10px;
 <<<<<<< HEAD
+<<<<<<< HEAD
     color: #4caf50; /* Green accent for send button */
 } 
 =======
     color: #6c63ff;
+=======
+    color: #34D399;
+    transition: all 0.3s ease;
+}
+
+.mini-chat-send-button:hover:not(:disabled) {
+    color: #10B981;
+    transform: scale(1.1);
+}
+
+.mini-chat-send-button:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
+.mini-chat-trigger-container {
+    position: fixed;
+    z-index: 2100;
+    pointer-events: none;
+}
+
+.mini-chat-trigger-button {
+    background: linear-gradient(135deg, #34D399 0%, #10B981 100%) !important;
+    text-transform: none !important;
+    font-size: 0.75rem !important;
+    padding: 6px 14px !important;
+    border-radius: 999px !important;
+    box-shadow: 0 10px 20px rgba(16, 185, 129, 0.25) !important;
+    pointer-events: auto !important;
+}
+
+.mini-chat-trigger-button:hover {
+    box-shadow: 0 12px 24px rgba(16, 185, 129, 0.3) !important;
+}
+
+.selection-action-wrapper {
+    display: flex;
+    gap: 8px;
+    pointer-events: auto;
+}
+
+.verify-trigger-button {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+    text-transform: none !important;
+    font-size: 0.75rem !important;
+    padding: 6px 14px !important;
+    border-radius: 999px !important;
+    box-shadow: 0 10px 20px rgba(59, 130, 246, 0.25) !important;
+    pointer-events: auto !important;
+    transition: box-shadow 0.3s ease, transform 0.2s ease !important;
+}
+
+.verify-trigger-button:hover:not(:disabled) {
+    box-shadow: 0 12px 24px rgba(37, 99, 235, 0.35) !important;
+    transform: translateY(-1px);
+}
+
+.verify-trigger-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    box-shadow: none !important;
+}
+
+.verify-offset-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 380px;
+    max-width: 90vw;
+    background: #1A3635;
+    border-left: 1px solid #2D5C5B;
+    box-shadow: -4px 0 12px rgba(0, 0, 0, 0.3);
+    display: flex;
+    flex-direction: column;
+    z-index: 2100;
+    animation: slideInFromRight 0.3s ease-out;
+}
+
+.verify-popover {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    color: #f8fafc;
+    pointer-events: auto;
+}
+
+.verify-popover-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px 12px 20px;
+}
+
+.verify-popover-title {
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.verify-popover-close-button {
+    color: rgba(248, 250, 252, 0.85) !important;
+    transition: transform 0.2s ease, color 0.2s ease !important;
+}
+
+.verify-popover-close-button:hover {
+    color: #f87171 !important;
+    transform: rotate(90deg);
+}
+
+.verify-popover-divider {
+    background-color: rgba(148, 163, 184, 0.25);
+    margin: 0 20px;
+}
+
+.verify-popover-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 16px 20px 20px 20px;
+    overflow-y: auto;
+}
+
+.verify-popover-query {
+    color: rgba(248, 250, 252, 0.8);
+    letter-spacing: 0.02em;
+}
+
+.verify-results-scroll {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.verify-popover-loading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(248, 250, 252, 0.9);
+}
+
+.verify-popover-error {
+    color: #f87171;
+}
+
+.verify-result-item {
+    background: rgba(45, 92, 91, 0.45);
+    border-radius: 12px;
+    padding: 12px;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.verify-result-title {
+    color: #bfdbfe;
+    font-weight: 600;
+}
+
+.verify-result-snippet {
+    color: rgba(226, 232, 240, 0.9);
+    line-height: 1.4;
+}
+
+.verify-result-link {
+    color: #60a5fa !important;
+    text-decoration: none;
+    word-break: break-all;
+}
+
+.verify-result-link:hover {
+    text-decoration: underline;
+}
+
+.verify-popover-empty {
+    color: rgba(226, 232, 240, 0.85);
+>>>>>>> 2cb9e50 (Added verification feature)
 }
 
 /* Scrollbar styling */
 .chat-messages-container::-webkit-scrollbar,
-.history-list::-webkit-scrollbar {
+.history-list::-webkit-scrollbar,
+.mini-chat-popover-box::-webkit-scrollbar { /* Add mini-chat scrollbar */
     width: 8px;
 }
 
 .chat-messages-container::-webkit-scrollbar-thumb,
-.history-list::-webkit-scrollbar-thumb {
-    background: rgba(99, 102, 241, 0.35);
+.history-list::-webkit-scrollbar-thumb,
+.mini-chat-popover-box::-webkit-scrollbar-thumb { /* Add mini-chat scrollbar */
+    background: rgba(52, 211, 153, 0.4);
     border-radius: 999px;
 }
 
 .chat-messages-container::-webkit-scrollbar-track,
-.history-list::-webkit-scrollbar-track {
+.history-list::-webkit-scrollbar-track,
+.mini-chat-popover-box::-webkit-scrollbar-track { /* Add mini-chat scrollbar */
     background: transparent;
 }
 >>>>>>> 182dae9 (Update)

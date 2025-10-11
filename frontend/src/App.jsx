@@ -1,5 +1,7 @@
 import React, { Suspense, useState, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const LazyChatbot = React.lazy(() => import('./components/Chatbot'));
 import Loader from './components/Loader';
 import Login from './components/Login'; // Import Login component
@@ -58,7 +60,20 @@ function App() {
     };
 
     return (
-        <div className="font-display bg-background-dark min-h-screen">
+        <div className="font-display min-h-screen" style={{ backgroundColor: '#213F3E' }}>
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+                newestOnTop={true}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="light"
+                style={{ zIndex: 9999 }}
+            />
             <Suspense fallback={<Loader />}>
                 <Routes>
                     <Route
