@@ -1,8 +1,8 @@
 /* frontend/src/components/HistroyBar.css */
 
-@keyframes slideInFromLeft {
+@keyframes sidebarSlideIn {
     from {
-        transform: translateX(-100%);
+        transform: translateX(-60px);
         opacity: 0;
     }
     to {
@@ -11,29 +11,21 @@
     }
 }
 
-@keyframes listItemSlideIn {
+@keyframes listItemFade {
     from {
         opacity: 0;
-        transform: translateX(-10px);
+        transform: translateY(6px);
     }
     to {
         opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-@keyframes spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
+        transform: translateY(0);
     }
 }
 
 .history-bar-container {
-    width: 280px;
+    width: 260px;
     flex-shrink: 0;
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
     background-color: #1b2625; /* Darker background for history bar */
@@ -55,15 +47,23 @@
     background: #1A3635;
     color: #E0E0E0;
 >>>>>>> 2cb9e50 (Added verification feature)
+=======
+    height: 100%;
+    margin: 0;
+    padding: 28px 24px;
+    background: var(--surface-card);
+    border: 1px solid rgba(var(--color-mid-rgb), 0.12);
+    border-radius: 28px;
+    box-shadow: 0 28px 52px rgba(var(--color-deep-rgb), 0.1);
+>>>>>>> b32dba6 (changed ui)
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    border-right: 1px solid #2D5C5B;
-    box-shadow: 4px 0 12px rgba(0, 0, 0, 0.3);
-    animation: slideInFromLeft 0.4s ease-out;
+    animation: sidebarSlideIn 0.4s ease;
+    color: var(--text-primary);
 }
 
 .history-bar-header {
+<<<<<<< HEAD
     padding: 18px;
     background: transparent;
 <<<<<<< HEAD
@@ -72,12 +72,16 @@
 =======
     border-bottom: 1px solid #2D5C5B;
 >>>>>>> 2cb9e50 (Added verification feature)
+=======
+>>>>>>> b32dba6 (changed ui)
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
 }
 
 .history-bar-title {
+<<<<<<< HEAD
 <<<<<<< HEAD
     font-weight: bold;
 }
@@ -93,23 +97,39 @@
 .new-chat-button:hover {
     background-color: #43a047 !important; /* Darker green on hover */
 =======
+=======
+    font-family: var(--font-heading);
+>>>>>>> b32dba6 (changed ui)
     font-weight: 600;
-    letter-spacing: 0.02em;
-    color: #E0E0E0;
+    letter-spacing: -0.01em;
+    text-transform: none;
+    color: var(--text-primary);
+}
+
+.refresh-button {
+    color: var(--text-secondary) !important;
+    transition: transform var(--transition), color var(--transition) !important;
+}
+
+.refresh-button:hover {
+    transform: rotate(-20deg) scale(1.05);
+    color: var(--accent-primary) !important;
 }
 
 .new-chat-button {
-    margin: 18px;
-    background: #34D399 !important;
-    color: white !important;
-    font-weight: 600;
-    border-radius: 12px !important;
-    box-shadow: 0 4px 12px rgba(52, 211, 153, 0.4) !important;
-    transition: all 0.3s ease !important;
-    transform: translateY(0);
+    margin-bottom: 28px !important;
+    background: linear-gradient(135deg, rgba(var(--color-mid-rgb), 0.9), rgba(var(--color-deep-rgb), 0.9)) !important;
+    color: var(--text-inverse) !important;
+    font-weight: 600 !important;
+    border-radius: 22px !important;
+    padding: 12px 20px !important;
+    letter-spacing: 0.01em !important;
+    box-shadow: 0 20px 38px rgba(var(--color-deep-rgb), 0.2) !important;
+    transition: transform var(--transition), box-shadow var(--transition) !important;
 }
 
 .new-chat-button:hover {
+<<<<<<< HEAD
 <<<<<<< HEAD
     background: linear-gradient(135deg, #5f6df7 0%, #4f9dff 100%) !important;
 >>>>>>> 182dae9 (Update)
@@ -123,11 +143,16 @@
     transform: translateY(0);
     box-shadow: 0 2px 8px rgba(34, 197, 94, 0.25) !important;
 >>>>>>> 2cb9e50 (Added verification feature)
+=======
+    transform: translateY(-2px) !important;
+    box-shadow: 0 26px 48px rgba(var(--color-deep-rgb), 0.24) !important;
+>>>>>>> b32dba6 (changed ui)
 }
 
 .history-list {
-    flex-grow: 1;
+    flex: 1;
     overflow-y: auto;
+<<<<<<< HEAD
 <<<<<<< HEAD
     padding: 0 16px;
 }
@@ -141,17 +166,38 @@
     background-color: #2e2e2e; /* Darker on hover */
 =======
     padding: 0 18px 18px;
+=======
+    padding-right: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.history-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.history-list::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, rgba(var(--color-mid-rgb), 0.4), rgba(var(--color-deep-rgb), 0.4));
+    border-radius: 999px;
+>>>>>>> b32dba6 (changed ui)
 }
 
 .history-list-item {
-    margin-bottom: 10px;
-    border-radius: 14px;
-    transition: all 0.3s ease;
-    animation: listItemSlideIn 0.3s ease-out;
-    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background: rgba(var(--color-soft-rgb), 0.65);
+    border-radius: 18px;
+    border: 1px solid rgba(var(--color-mid-rgb), 0.16);
+    transition: transform var(--transition), border-color var(--transition), background var(--transition), box-shadow var(--transition);
+    padding: 6px;
+    animation: listItemFade 0.35s ease;
 }
 
 .history-list-item:hover {
+<<<<<<< HEAD
 <<<<<<< HEAD
     background: rgba(99, 102, 241, 0.08);
     box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
@@ -200,12 +246,35 @@
     background: rgba(52, 211, 153, 0.2) !important;
     color: #34D399 !important;
 >>>>>>> 2cb9e50 (Added verification feature)
+=======
+    transform: translateX(6px);
+    border-color: rgba(var(--color-mid-rgb), 0.32);
+    background: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 18px 32px rgba(var(--color-deep-rgb), 0.16);
+}
+
+.history-list-item-button {
+    flex: 1;
+    justify-content: flex-start !important;
+    text-transform: none !important;
+    color: var(--text-secondary) !important;
+    border-radius: 16px !important;
+    padding: 14px 16px !important;
+    letter-spacing: 0.02em !important;
+    gap: 12px;
+    font-weight: 600 !important;
+}
+
+.history-list-item-button.Mui-selected {
+    background: rgba(var(--color-mid-rgb), 0.16) !important;
+    color: var(--text-primary) !important;
+>>>>>>> b32dba6 (changed ui)
 }
 
 .history-loading-spinner {
     display: flex;
-    justify-content: center;
     align-items: center;
+<<<<<<< HEAD
 <<<<<<< HEAD
     padding: 20px;
 }
@@ -232,47 +301,57 @@
 }
 =======
     padding: 24px;
+=======
+    justify-content: center;
+    padding: 24px 0;
+>>>>>>> b32dba6 (changed ui)
 }
 
 .history-bar-footer {
-    padding: 18px;
-    border-top: 1px solid #2D5C5B;
-    background: #213F3E;
+    margin-top: 28px;
+    border-top: 1px solid rgba(var(--color-mid-rgb), 0.12);
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
 .logout-button {
-    margin-top: 12px !important;
-    background: #ef4444 !important;
-    color: white !important;
-    font-weight: 600;
-    border-radius: 12px !important;
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3) !important;
-    transition: all 0.3s ease !important;
-    transform: translateY(0);
+    align-self: stretch;
+    justify-content: center;
+    border-radius: 18px !important;
+    padding: 12px !important;
+    background: rgba(var(--color-mid-rgb), 0.14) !important;
+    color: var(--text-primary) !important;
+    font-weight: 600 !important;
+    letter-spacing: 0.02em !important;
+    transition: transform var(--transition), background var(--transition), box-shadow var(--transition) !important;
 }
 
 .logout-button:hover {
-    background: #dc2626 !important;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4) !important;
+    background: rgba(var(--color-mid-rgb), 0.24) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 18px 32px rgba(var(--color-deep-rgb), 0.18) !important;
 }
 
-.logout-button:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25) !important;
+.history-list-item .MuiIconButton-root {
+    color: rgba(var(--color-deep-rgb), 0.35);
+    transition: color var(--transition), transform var(--transition);
 }
 
-.refresh-button {
-    color: #34D399 !important;
-    transition: all 0.3s ease !important;
+.history-list-item .MuiIconButton-root:hover {
+    color: var(--danger);
+    transform: scale(1.12);
 }
 
-.refresh-button:hover {
-    color: #10B981 !important;
-    transform: scale(1.1);
-}
-
-.refresh-button:active {
-    animation: spin 0.6s ease-in-out;
+@media (max-width: 1180px) {
+    .history-bar-container {
+        position: fixed;
+        inset: 24px;
+        width: auto;
+        height: calc(100vh - 48px);
+        margin: 0;
+        z-index: 1050;
+    }
 }
 >>>>>>> 182dae9 (Update)

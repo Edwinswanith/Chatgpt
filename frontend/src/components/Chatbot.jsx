@@ -18,7 +18,8 @@ import {
 import { useTheme } from '@mui/material/styles';
 import HistoryIcon from '@mui/icons-material/History';
 import CloseIcon from '@mui/icons-material/Close';
-import LightbulbOutlinedIcon from '@mui/icons-material/LightbulbOutlined';
+import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
+import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import TravelExploreIcon from '@mui/icons-material/TravelExplore';
 import SendIcon from '@mui/icons-material/Send';
@@ -35,6 +36,8 @@ import Input from './Input';
 import api from '../api/apiUrl';
 import './Chatbot.css';
 
+const HIGHLIGHT_CACHE_KEY = 'stellar_ai_highlight_cache_v1';
+
 const escapeRegExp = (str = '') => str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const normalizeTextForMatch = (str = '') =>
   str
@@ -44,6 +47,7 @@ const normalizeTextForMatch = (str = '') =>
     .toLowerCase();
 
 const TEMP_STYLE = {
+<<<<<<< HEAD
 <<<<<<< HEAD
   backgroundColor: '#5b799b',
   color: '#e0e0e0',
@@ -66,6 +70,15 @@ const HIGHLIGHT_GREEN_STYLE = {
   color: '#312e81',
   borderRadius: '6px',
   padding: '0 4px',
+=======
+  backgroundClip: 'padding-box',
+  backgroundImage: 'linear-gradient(135deg, rgba(var(--color-sand-rgb), 0.45), rgba(var(--color-soft-rgb), 0.35))',
+  color: 'var(--text-primary)',
+  borderRadius: '999px',
+  padding: '1px 8px',
+  border: '1px dashed rgba(var(--color-deep-rgb), 0.35)',
+  fontWeight: 600,
+>>>>>>> b32dba6 (changed ui)
 };
 <<<<<<< HEAD
 const HIGHLIGHT_BLUE_STYLE = {
@@ -85,22 +98,26 @@ const HIGHLIGHT_GREEN_STYLE = {
 
 const SAVED_HIGHLIGHT_STYLES = [
   {
-    color: '#0f172a',
-    backgroundColor: 'rgba(15, 23, 42, 0.12)',
-    textDecoration: 'underline',
+    color: 'var(--text-primary)',
+    backgroundImage: 'linear-gradient(120deg, rgba(var(--color-mid-rgb), 0.55), rgba(var(--color-deep-rgb), 0.45))',
+    textDecoration: 'none',
     fontWeight: 600,
-    borderRadius: '4px',
-    padding: '0 4px',
+    borderRadius: '999px',
+    padding: '2px 10px',
     cursor: 'pointer',
+    border: '1px solid rgba(var(--color-deep-rgb), 0.45)',
+    boxShadow: '0 8px 18px rgba(var(--color-deep-rgb), 0.26)',
   },
   {
-    color: '#111827',
-    backgroundColor: 'rgba(15, 23, 42, 0.2)',
-    textDecoration: 'underline',
+    color: 'var(--text-primary)',
+    backgroundImage: 'linear-gradient(120deg, rgba(var(--color-sand-rgb), 0.65), rgba(var(--color-mid-rgb), 0.5))',
+    textDecoration: 'none',
     fontWeight: 600,
-    borderRadius: '4px',
-    padding: '0 4px',
+    borderRadius: '999px',
+    padding: '2px 10px',
     cursor: 'pointer',
+    border: '1px solid rgba(var(--color-mid-rgb), 0.42)',
+    boxShadow: '0 8px 18px rgba(var(--color-mid-rgb), 0.3)',
   },
 ];
 
@@ -179,6 +196,8 @@ const makeTextRenderer = (tempPhrases, savedPhrasesWithCtx, onSavedHighlightClic
             <span
               key={`saved-${idxOffset}-${matchStart}`}
               style={currentStyle}
+              className="chat-highlight saved-highlight"
+              data-highlight="saved"
               title="View saved mini chat"
               role="button"
               tabIndex={0}
@@ -203,7 +222,12 @@ const makeTextRenderer = (tempPhrases, savedPhrasesWithCtx, onSavedHighlightClic
           );
         } else {
           nodes.push(
-            <span key={`temp-${idxOffset}-${matchStart}`} style={TEMP_STYLE}>
+            <span
+              key={`temp-${idxOffset}-${matchStart}`}
+              style={TEMP_STYLE}
+              className="chat-highlight temp-highlight"
+              data-highlight="temp"
+            >
               {matchedText}
             </span>
           );
@@ -227,7 +251,7 @@ const makeTextRenderer = (tempPhrases, savedPhrasesWithCtx, onSavedHighlightClic
   };
 };
 
-const Chatbot = ({ user, onLogout }) => {
+const Chatbot = ({ user, onLogout, themeMode = 'light', onToggleTheme = () => {} }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [sessionId, setSessionId] = useState(null);
@@ -238,6 +262,8 @@ const Chatbot = ({ user, onLogout }) => {
   const [contextId, setContextId] = useState(null);
 
   const [miniChatHistory, setMiniChatHistory] = useState({});
+  const [miniChatPopups, setMiniChatPopups] = useState([]);
+  const [isMiniChatPopupVisible, setIsMiniChatPopupVisible] = useState(false);
   const [isMiniChatOpen, setIsMiniChatOpen] = useState(false);
   const [selectedText, setSelectedText] = useState('');
   const [selectedTextForSaving, setSelectedTextForSaving] = useState('');
@@ -250,6 +276,7 @@ const Chatbot = ({ user, onLogout }) => {
   const [miniChatContextId, setMiniChatContextId] = useState(null);
   const [tempHighlightedPhrases, setTempHighlightedPhrases] = useState([]);
   const [selectionMenuPosition, setSelectionMenuPosition] = useState(null);
+  const [selectionSource, setSelectionSource] = useState('none');
 
   const [verifyResults, setVerifyResults] = useState([]);
   const [verifyLoading, setVerifyLoading] = useState(false);
@@ -259,7 +286,130 @@ const Chatbot = ({ user, onLogout }) => {
 
   const fileInputRef = useRef(null);
   const miniChatOpenRef = useRef(false);
+  const miniChatPopupsRef = useRef([]);
   const isSendingRef = useRef(false);
+  const messagesContainerRef = useRef(null);
+  const autoScrollRef = useRef(true);
+
+  const scrollMessagesToBottom = useCallback(
+    (behavior = 'smooth') => {
+      const container = messagesContainerRef.current;
+      if (!container) return;
+      container.scrollTo({
+        top: container.scrollHeight,
+        behavior,
+      });
+    },
+    []
+  );
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const cached = localStorage.getItem(HIGHLIGHT_CACHE_KEY);
+      if (!cached) return;
+      const parsed = JSON.parse(cached);
+      if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return;
+
+      const sanitized = Object.entries(parsed).reduce((acc, [rawContextId, value]) => {
+        if (!value || typeof value !== 'object') {
+          return acc;
+        }
+        const contextId = String(rawContextId);
+        const phrase = typeof value.phrase === 'string' ? value.phrase : '';
+        const messages = Array.isArray(value.messages)
+          ? value.messages
+              .filter((msg) => msg && typeof msg.text === 'string')
+              .map((msg) => ({
+                sender: msg.sender === 'bot' || msg.sender === 'model' ? 'bot' : 'user',
+                text: msg.text,
+              }))
+          : [];
+        if (!phrase && messages.length === 0) {
+          return acc;
+        }
+        acc[contextId] = { phrase, messages };
+        return acc;
+      }, {});
+
+      const cacheEntries = Object.entries(sanitized);
+      if (cacheEntries.length === 0) {
+        return;
+      }
+
+      setMiniChatHistory((prev) => ({
+        ...sanitized,
+        ...prev,
+      }));
+
+      setSavedPhrases((prev = []) => {
+        const merged = [...prev];
+        cacheEntries.forEach(([contextId, value]) => {
+          const phrase = value.phrase || '';
+          if (!phrase.trim()) return;
+          const normalized = normalizeTextForMatch(phrase);
+          if (!normalized) return;
+
+          const entry = {
+            t: phrase,
+            context_id: contextId,
+            normalized,
+          };
+
+          const existingIndex = merged.findIndex(
+            (item) =>
+              item?.context_id === contextId ||
+              (item && typeof item.normalized === 'string' && item.normalized === normalized)
+          );
+
+          if (existingIndex !== -1) {
+            merged[existingIndex] = entry;
+          } else {
+            merged.push(entry);
+          }
+        });
+        return merged;
+      });
+    } catch (error) {
+      console.error('Failed to restore highlight cache:', error);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const entries = Object.entries(miniChatHistory || {});
+      if (!entries.length) {
+        localStorage.removeItem(HIGHLIGHT_CACHE_KEY);
+        return;
+      }
+
+      const sanitized = entries.reduce((acc, [contextId, value]) => {
+        if (!value || typeof value !== 'object') {
+          return acc;
+        }
+        const phrase = typeof value.phrase === 'string' ? value.phrase : '';
+        const messages = Array.isArray(value.messages)
+          ? value.messages
+              .filter((msg) => msg && typeof msg.text === 'string')
+              .map((msg) => ({
+                sender: msg.sender === 'bot' || msg.sender === 'model' ? 'bot' : 'user',
+                text: msg.text,
+              }))
+          : [];
+        acc[contextId] = { phrase, messages };
+        return acc;
+      }, {});
+
+      localStorage.setItem(HIGHLIGHT_CACHE_KEY, JSON.stringify(sanitized));
+    } catch (error) {
+      console.error('Failed to persist highlight cache:', error);
+    }
+  }, [miniChatHistory]);
+
+  const removeMiniChatPopup = useCallback((popupId) => {
+    setMiniChatPopups((prev) => prev.filter((popup) => popup.id !== popupId));
+  }, []);
 
   const theme = useTheme();
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'));
@@ -282,17 +432,9 @@ const Chatbot = ({ user, onLogout }) => {
       const resolvedPhrase = resolvedPhraseRaw.replace(/\s+/g, ' ').trim();
       const normalizedResolved = normalizeTextForMatch(resolvedPhrase);
 
+      setIsMiniChatPopupVisible(false);
+      setMiniChatPopups([]);
       setSelectionMenuPosition(null);
-      const cachedConversation = miniChatHistory[targetContextId];
-      if (cachedConversation && Array.isArray(cachedConversation.messages)) {
-        const hydratedMessages = cachedConversation.messages.map((msg) => ({
-          text: msg?.text ?? '',
-          sender: msg?.sender === 'bot' || msg?.sender === 'model' ? 'bot' : 'user',
-        }));
-        setMiniChatMessages(hydratedMessages);
-      } else {
-        setMiniChatMessages([]);
-      }
       setMiniChatInput('');
       setSelectedText(resolvedPhrase);
       setSelectedTextForSaving(resolvedPhrase);
@@ -302,6 +444,31 @@ const Chatbot = ({ user, onLogout }) => {
       setMiniChatContextId(targetContextId);
       setIsMiniChatOpen(true);
       miniChatOpenRef.current = true;
+
+      const cachedConversation = miniChatHistory[targetContextId];
+      const cachedMessages = Array.isArray(cachedConversation?.messages)
+        ? cachedConversation.messages
+        : [];
+
+      if (cachedMessages.length > 0) {
+        const displayPhraseRaw = (cachedConversation?.phrase || resolvedPhrase).replace(/\u00a0/g, ' ');
+        const displayPhrase = displayPhraseRaw.replace(/\s+/g, ' ').trim();
+
+        const normalizedMessages = cachedMessages.map((msg) => ({
+          text: msg?.text ?? '',
+          sender: msg?.sender === 'bot' || msg?.sender === 'model' ? 'bot' : 'user',
+        }));
+
+        setSelectedText(displayPhrase);
+        setSelectedTextForSaving(displayPhrase);
+        setSelectedTextNormalized(normalizeTextForMatch(displayPhrase));
+        setTempHighlightedPhrases(displayPhrase ? [displayPhrase] : []);
+        setMiniChatMessages(normalizedMessages);
+        setMiniChatLoading(false);
+        return;
+      }
+
+      setMiniChatMessages([]);
       setMiniChatLoading(true);
 
       try {
@@ -310,16 +477,15 @@ const Chatbot = ({ user, onLogout }) => {
         const displayPhraseRaw = (response.data?.phrase || resolvedPhrase).replace(/\u00a0/g, ' ');
         const displayPhrase = displayPhraseRaw.replace(/\s+/g, ' ').trim();
 
-        setSelectedText(displayPhrase);
-        setSelectedTextForSaving(displayPhrase);
-        setSelectedTextNormalized(normalizeTextForMatch(displayPhrase));
-        setTempHighlightedPhrases(displayPhrase ? [displayPhrase] : []);
-
         const normalized = historyMessages.map((msg) => ({
           text: msg?.text ?? '',
           sender: msg?.sender === 'bot' || msg?.sender === 'model' ? 'bot' : 'user',
         }));
 
+        setSelectedText(displayPhrase);
+        setSelectedTextForSaving(displayPhrase);
+        setSelectedTextNormalized(normalizeTextForMatch(displayPhrase));
+        setTempHighlightedPhrases(displayPhrase ? [displayPhrase] : []);
         setMiniChatMessages(normalized);
         setMiniChatHistory((prev) => ({
           ...prev,
@@ -384,6 +550,8 @@ const Chatbot = ({ user, onLogout }) => {
     }
     setContextId(null);
     setMiniChatHistory({});
+    setMiniChatPopups([]);
+    setIsMiniChatPopupVisible(false);
     setIsMiniChatOpen(false);
     setSelectedText('');
     setSelectedTextForSaving('');
@@ -396,6 +564,7 @@ const Chatbot = ({ user, onLogout }) => {
     setTempHighlightedPhrases([]);
     setSavedPhrases([]);
     setSelectionMenuPosition(null);
+    autoScrollRef.current = true;
     miniChatOpenRef.current = false;
   }, [sessionId, clearVerifyState]);
 
@@ -404,6 +573,7 @@ const Chatbot = ({ user, onLogout }) => {
       setHistoryLoading(true);
       try {
         const response = await api.get(`/history?sessionId=${sId}`);
+        autoScrollRef.current = true;
         setMessages(response.data.messages);
         setSavedPhrases(
           response.data.highlights.map((h) => ({
@@ -442,6 +612,8 @@ const Chatbot = ({ user, onLogout }) => {
       setMiniChatInput('');
       setMiniChatLoading(false);
       setMiniChatContextId(null);
+      setMiniChatPopups([]);
+      setIsMiniChatPopupVisible(false);
       setMiniChatHistory({});
       setTempHighlightedPhrases([]);
       setSelectionMenuPosition(null);
@@ -459,8 +631,46 @@ const Chatbot = ({ user, onLogout }) => {
   }, [sessionId, startNewChat, user, fetchHistory]);
 
   useEffect(() => {
-    miniChatOpenRef.current = isMiniChatOpen;
-  }, [isMiniChatOpen]);
+    miniChatPopupsRef.current = miniChatPopups;
+    miniChatOpenRef.current =
+      isMiniChatOpen || (isMiniChatPopupVisible && miniChatPopups.length > 0);
+  }, [isMiniChatOpen, isMiniChatPopupVisible, miniChatPopups]);
+
+  useEffect(() => {
+    const container = messagesContainerRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
+      autoScrollRef.current = distanceFromBottom <= 120;
+    };
+
+    handleScroll();
+    container.addEventListener('scroll', handleScroll);
+    return () => {
+      container.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!autoScrollRef.current) {
+      return;
+    }
+
+    const raf = requestAnimationFrame(() => {
+      const behavior = messages.length <= 1 ? 'auto' : 'smooth';
+      scrollMessagesToBottom(behavior);
+    });
+
+    return () => cancelAnimationFrame(raf);
+  }, [messages, scrollMessagesToBottom]);
+
+  useEffect(() => {
+    if (miniChatPopups.length === 0) {
+      setIsMiniChatPopupVisible(false);
+    }
+  }, [miniChatPopups.length]);
 
   useEffect(() => {
     const handleDocumentSelectionChange = () => {
@@ -474,6 +684,7 @@ const Chatbot = ({ user, onLogout }) => {
           setSelectedTextNormalized('');
           setSelectedMsgIndex(null);
         }
+        setSelectionSource('none');
       }
     };
 
@@ -499,6 +710,7 @@ const Chatbot = ({ user, onLogout }) => {
     };
 
     setMessages((prevMessages) => [...prevMessages, pendingMessage]);
+    autoScrollRef.current = true;
     isSendingRef.current = true;
     setLoading(true);
 
@@ -528,6 +740,7 @@ const Chatbot = ({ user, onLogout }) => {
         ...prevMessages,
         { sender: 'model', text: '', image_data: [] },
       ]);
+      autoScrollRef.current = true;
 
       while (true) {
         const { done, value } = await reader.read();
@@ -548,6 +761,7 @@ const Chatbot = ({ user, onLogout }) => {
         position: 'top-right',
         autoClose: 3000,
       });
+      autoScrollRef.current = true;
       setMessages((prevMessages) => {
         const withoutPending = prevMessages.filter(
           (msg) =>
@@ -588,7 +802,7 @@ const Chatbot = ({ user, onLogout }) => {
     }
   };
 
-  const handleTextSelect = (event, messageIndex) => {
+  const handleTextSelect = (event, messageIndex, origin = 'chat') => {
     clearVerifyState();
     const sel = window.getSelection();
     if (!sel) return;
@@ -607,6 +821,7 @@ const Chatbot = ({ user, onLogout }) => {
       !event.currentTarget.contains(anchorNode)
     ) {
       setSelectionMenuPosition(null);
+      setSelectionSource('none');
       if (!isMiniChatOpen) {
         setTempHighlightedPhrases([]);
         setSelectedText('');
@@ -615,6 +830,29 @@ const Chatbot = ({ user, onLogout }) => {
         setSelectedMsgIndex(null);
       }
       return;
+    }
+
+    if (origin === 'mini-chat') {
+      setTempHighlightedPhrases((prev) => {
+        const filtered = prev.filter(
+          (phrase) => normalizeTextForMatch(phrase) !== normalizedSelection
+        );
+        return [trimmedSelection, ...filtered];
+      });
+      setSelectionMenuPosition(null);
+      handleOpenMiniChatFromSelection(trimmedSelection, 'mini-chat');
+      return;
+    }
+
+    if (origin === 'chat') {
+      const matchedSavedHighlight = savedPhrases.find(
+        (phrase) => phrase.normalized === normalizedSelection
+      );
+      if (matchedSavedHighlight) {
+        setSelectionMenuPosition(null);
+        handleSavedHighlightActivate(matchedSavedHighlight.context_id, matchedSavedHighlight.t);
+        return;
+      }
     }
 
     const range = sel.getRangeAt(0);
@@ -631,11 +869,17 @@ const Chatbot = ({ user, onLogout }) => {
       ? computedTop - Math.max(verticalOffset, 24)
       : computedTop + Math.max(verticalOffset, 12);
 
+    setSelectionSource('chat');
     setSelectedText(trimmedSelection);
     setSelectedTextForSaving(trimmedSelection);
     setSelectedTextNormalized(normalizedSelection);
     setSelectedMsgIndex(messageIndex);
-    setTempHighlightedPhrases([trimmedSelection]);
+    setTempHighlightedPhrases((prev) => {
+      const filtered = prev.filter(
+        (phrase) => normalizeTextForMatch(phrase) !== normalizedSelection
+      );
+      return [trimmedSelection, ...filtered];
+    });
     setSelectionMenuPosition({
       top: Math.max(topValue, 12),
       left: computedLeft,
@@ -643,17 +887,118 @@ const Chatbot = ({ user, onLogout }) => {
     });
   };
 
-  const handleAskSelection = async (textToAsk) => {
+  const requestPopupFollowup = useCallback(
+    async (popupId, phrase, contextId, initialResponse) => {
+      if (!popupId || !phrase || !contextId) return;
+
+      const existingPopup = miniChatPopupsRef.current.find((popup) => popup.id === popupId);
+      if (existingPopup && existingPopup.extraResponse) {
+        return;
+      }
+
+      setMiniChatPopups((prev) =>
+        prev.map((popup) =>
+          popup.id === popupId ? { ...popup, loading: true, error: '' } : popup
+        )
+      );
+
+      const historyForRequest = [];
+      if (initialResponse) {
+        historyForRequest.push({ sender: 'bot', text: initialResponse });
+      }
+
+      try {
+        const response = await fetch(`${api.defaults.baseURL}/mini_chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            text: phrase,
+            query: `Provide an additional helpful insight about "${phrase}".`,
+            context_id: contextId,
+            history: historyForRequest,
+          }),
+          credentials: 'include',
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const botMessageText = await response.text();
+        const trimmedFollowup = botMessageText.trim();
+
+        setMiniChatPopups((prev) =>
+          prev.map((popup) =>
+            popup.id === popupId
+              ? {
+                  ...popup,
+                  extraResponse: trimmedFollowup,
+                  loading: false,
+                  error: '',
+                }
+              : popup
+          )
+        );
+
+        if (trimmedFollowup.length > 0) {
+          setMiniChatMessages((prev) => [...prev, { text: trimmedFollowup, sender: 'bot' }]);
+          setMiniChatHistory((prev) => {
+            const previousHistory = prev[contextId]?.messages || [];
+            return {
+              ...prev,
+              [contextId]: {
+                phrase,
+                messages: [
+                  ...previousHistory,
+                  { sender: 'bot', text: trimmedFollowup },
+                ],
+              },
+            };
+          });
+        }
+      } catch (error) {
+        console.error('Error generating follow-up response:', error);
+        setMiniChatPopups((prev) =>
+          prev.map((popup) =>
+            popup.id === popupId
+              ? {
+                  ...popup,
+                  loading: false,
+                  error: 'Failed to generate additional insight.',
+                }
+              : popup
+          )
+        );
+      }
+    },
+    [setMiniChatPopups, setMiniChatMessages, setMiniChatHistory]
+  );
+
+  const handleAskSelection = async (textToAsk, popupId = null, origin = 'chat') => {
     const condensed = textToAsk.replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim();
     clearVerifyState();
-    setMiniChatLoading(true);
+    const isMiniChatPopupRequest = origin === 'mini-chat' && Boolean(popupId);
+    if (!isMiniChatPopupRequest) {
+      setMiniChatLoading(true);
+    }
+    if (popupId) {
+      setMiniChatPopups((prev) =>
+        prev.map((popup) =>
+          popup.id === popupId
+            ? { ...popup, phrase: condensed, loading: true, error: '', explanation: '', extraResponse: '' }
+            : popup
+        )
+      );
+    }
     try {
       const response = await api.post('/ask_selection', { text: condensed });
       if (response.data && response.data.response) {
         const initialMessage = { text: response.data.response, sender: 'bot' };
         const newContextId = response.data.context_id;
-        setMiniChatMessages([initialMessage]);
-        setMiniChatContextId(newContextId);
+        if (!isMiniChatPopupRequest) {
+          setMiniChatMessages([initialMessage]);
+          setMiniChatContextId(newContextId);
+        }
         setMiniChatHistory((prev) => ({
           ...prev,
           [newContextId]: {
@@ -661,12 +1006,64 @@ const Chatbot = ({ user, onLogout }) => {
             messages: [{ sender: 'bot', text: initialMessage.text }],
           },
         }));
+
+        if (origin === 'chat' && newContextId) {
+          setSavedPhrases((prev) => {
+            const normalizedPhrase = normalizeTextForMatch(condensed);
+            const updatedRecord = {
+              t: condensed,
+              context_id: newContextId,
+              normalized: normalizedPhrase,
+            };
+
+            const existingIndex = prev.findIndex(
+              (phrase) =>
+                phrase.context_id === newContextId || phrase.normalized === normalizedPhrase
+            );
+            if (existingIndex !== -1) {
+              const next = [...prev];
+              next[existingIndex] = updatedRecord;
+              return next;
+            }
+
+            return [...prev, updatedRecord];
+          });
+        }
+
+        if (popupId) {
+          setMiniChatPopups((prev) =>
+            prev.map((popup) =>
+              popup.id === popupId
+                ? {
+                    ...popup,
+                    phrase: condensed,
+                    explanation: initialMessage.text,
+                    contextId: newContextId,
+                    loading: false,
+                    error: '',
+                  }
+                : popup
+            )
+          );
+          requestPopupFollowup(popupId, condensed, newContextId, initialMessage.text);
+        }
       } else {
-        setMiniChatMessages([{ text: 'Error: Could not get a response.', sender: 'bot' }]);
+        if (!isMiniChatPopupRequest) {
+          setMiniChatMessages([{ text: 'Error: Could not get a response.', sender: 'bot' }]);
+        }
         toast.error('Failed to get explanation', {
           position: 'top-right',
           autoClose: 3000,
         });
+        if (popupId) {
+          setMiniChatPopups((prev) =>
+            prev.map((popup) =>
+              popup.id === popupId
+                ? { ...popup, loading: false, error: 'Failed to get explanation.' }
+                : popup
+            )
+          );
+        }
       }
     } catch (error) {
       console.error('Error sending text for asking:', error);
@@ -674,29 +1071,78 @@ const Chatbot = ({ user, onLogout }) => {
         position: 'top-right',
         autoClose: 3000,
       });
-      setMiniChatMessages([{ text: 'Error: Could not get a response.', sender: 'bot' }]);
+      if (!isMiniChatPopupRequest) {
+        setMiniChatMessages([{ text: 'Error: Could not get a response.', sender: 'bot' }]);
+      }
+      if (popupId) {
+        setMiniChatPopups((prev) =>
+          prev.map((popup) =>
+            popup.id === popupId
+              ? {
+                  ...popup,
+                  loading: false,
+                  error: 'Unable to retrieve explanation.',
+                }
+              : popup
+          )
+        );
+      }
     } finally {
-      setMiniChatLoading(false);
+      if (!isMiniChatPopupRequest) {
+        setMiniChatLoading(false);
+      }
     }
   };
 
-  const handleOpenMiniChatFromSelection = () => {
-    const textForQuery = (selectedTextForSaving || selectedText || '').trim();
+  const handleOpenMiniChatFromSelection = (overrideText = null, sourceOverride = null) => {
+    const textForQuery = (overrideText || selectedTextForSaving || selectedText || '').trim();
     if (!textForQuery) return;
 
-    setMiniChatInput('');
-    setMiniChatMessages([]);
-    miniChatOpenRef.current = true;
-    setIsMiniChatOpen(true);
-    setIsVerifyOpen(false);
-    setSelectionMenuPosition(null);
-    handleAskSelection(textForQuery);
+    const effectiveSource = sourceOverride ?? selectionSource;
+    const shouldSpawnPopup = effectiveSource === 'mini-chat';
+    let popupId = null;
+
+    if (shouldSpawnPopup) {
+      popupId = uuidv4();
+      setIsMiniChatPopupVisible(true);
+      setMiniChatPopups((prev) => [
+        ...prev,
+        {
+          id: popupId,
+          phrase: textForQuery,
+          explanation: '',
+          extraResponse: '',
+          contextId: null,
+          loading: true,
+          error: '',
+          createdAt: Date.now(),
+        },
+      ]);
+    } else {
+      setIsMiniChatPopupVisible(false);
+      setMiniChatPopups([]);
+    }
+
+    if (!shouldSpawnPopup) {
+      setMiniChatInput('');
+      setMiniChatMessages([]);
+      miniChatOpenRef.current = true;
+      setIsMiniChatOpen(true);
+      setIsVerifyOpen(false);
+      setSelectionMenuPosition(null);
+      setSelectionSource('none');
+    }
+
+    handleAskSelection(textForQuery, popupId || undefined, effectiveSource);
   };
 
   const handleVerifySelection = async () => {
     const textToVerify = (selectedTextForSaving || selectedText || '').trim();
     if (!textToVerify || verifyLoading) return;
 
+    setIsMiniChatPopupVisible(false);
+    setMiniChatPopups([]);
+    setSelectionSource('none');
     setIsMiniChatOpen(false);
     miniChatOpenRef.current = false;
     setIsVerifyOpen(true);
@@ -922,6 +1368,9 @@ const Chatbot = ({ user, onLogout }) => {
       setSelectedTextNormalized('');
     }
     setSelectionMenuPosition(null);
+    setIsMiniChatPopupVisible(false);
+    setMiniChatPopups([]);
+    setSelectionSource('none');
   };
 
   const sidePanelOpen = isMiniChatOpen || isVerifyOpen;
@@ -934,7 +1383,9 @@ const Chatbot = ({ user, onLogout }) => {
           onSelectSession={selectSession}
           isPending={historyLoading}
           onLogout={onLogout}
-          username={user.username}
+          username={user?.username || ""}
+          onToggleTheme={onToggleTheme}
+          themeMode={themeMode}
         />
       )}
 
@@ -943,10 +1394,10 @@ const Chatbot = ({ user, onLogout }) => {
         sx={{
           width: isHistoryBarOpen && isLargeScreen
             ? sidePanelOpen
-              ? 'calc(100vw - 280px - 380px)'
-              : 'calc(100vw - 280px)'
+              ? 'calc(100vw - 240px - 360px)'
+              : 'calc(100vw - 240px)'
             : sidePanelOpen
-            ? 'calc(100vw - 380px)'
+            ? 'calc(100vw - 360px)'
             : '100vw',
         }}
       >
@@ -966,26 +1417,26 @@ const Chatbot = ({ user, onLogout }) => {
                 width: 24,
                 height: 24,
                 mr: 1.5,
-                background: '#34D399',
+                background: 'linear-gradient(135deg, var(--color-soft), var(--color-mid))',
                 clipPath: 'polygon(50% 0%, 80% 20%, 100% 50%, 80% 80%, 50% 100%, 20% 80%, 0% 50%, 20% 20%)',
-                boxShadow: '0 2px 8px rgba(52, 211, 153, 0.3)',
+                boxShadow: '0 2px 10px rgba(var(--color-mid-rgb), 0.38)',
               }}
             />
             <Typography variant="h6" component="div" className="chat-title">
               Stellar AI
             </Typography>
-            <Tooltip title="Toggle Dark/Light Mode">
-              <IconButton color="inherit">
-                <LightbulbOutlinedIcon />
+            <Tooltip title={themeMode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}>
+              <IconButton color="inherit" onClick={onToggleTheme} className="theme-toggle-icon">
+                {themeMode === 'dark' ? <LightModeOutlinedIcon /> : <DarkModeOutlinedIcon />}
               </IconButton>
             </Tooltip>
-            <Tooltip title={user.username}>
-              <Avatar className="chat-avatar">{user.username.charAt(0).toUpperCase()}</Avatar>
+            <Tooltip title={user?.username || ""}>
+              <Avatar className="chat-avatar">{(user?.username || "?").charAt(0).toUpperCase()}</Avatar>
             </Tooltip>
           </Toolbar>
         </AppBar>
 
-        <Box className="chat-messages-container">
+        <Box className="chat-messages-container" ref={messagesContainerRef}>
           {messages.map((msg, index) => (
             <Box
               key={index}
@@ -1071,7 +1522,7 @@ const Chatbot = ({ user, onLogout }) => {
               variant="contained"
               className="mini-chat-trigger-button"
               startIcon={<ChatBubbleOutlineIcon fontSize="small" />}
-              onClick={handleOpenMiniChatFromSelection}
+              onClick={() => handleOpenMiniChatFromSelection()}
             >
               Ask AI
             </Button>
@@ -1083,9 +1534,98 @@ const Chatbot = ({ user, onLogout }) => {
               onClick={handleVerifySelection}
               disabled={verifyLoading}
             >
-              {verifyLoading ? 'Verifying…' : 'Verify'}
+              {verifyLoading ? 'VerifyingÃ¢â‚¬Â¦' : 'Verify'}
             </Button>
           </Box>
+        </Box>
+      )}
+
+      {isMiniChatPopupVisible && miniChatPopups.length > 0 && (
+        <Box className="mini-chat-popups-container">
+          {miniChatPopups.map((popup) => {
+            const hasExplanation = popup.explanation && popup.explanation.trim().length > 0;
+            const hasExtra = popup.extraResponse && popup.extraResponse.trim().length > 0;
+            return (
+              <Box key={popup.id} className="mini-chat-popup-card">
+                <Box className="mini-chat-popup-card-header">
+                  <Tooltip title={popup.phrase}>
+                    <Typography variant="subtitle2" className="mini-chat-popup-title" noWrap>
+                      {popup.phrase}
+                    </Typography>
+                  </Tooltip>
+                  <IconButton
+                    size="small"
+                    onClick={() => removeMiniChatPopup(popup.id)}
+                    className="mini-chat-popup-close-button"
+                  >
+                    <CloseIcon fontSize="small" />
+                  </IconButton>
+                </Box>
+                <Divider className="mini-chat-popup-divider" />
+                <Box className="mini-chat-popup-card-body">
+                  {popup.error ? (
+                    <Typography variant="body2" className="mini-chat-popup-error">
+                      {popup.error}
+                    </Typography>
+                  ) : (
+                    <>
+                      <Box className="mini-chat-popup-section">
+                        <Typography variant="caption" className="mini-chat-popup-label">
+                          Meaning & Context
+                        </Typography>
+                        {hasExplanation ? (
+                          <Box className="mini-chat-popup-markdown">
+                            <ReactMarkdown
+                              remarkPlugins={[remarkGfm, remarkMath]}
+                              rehypePlugins={[rehypeKatex]}
+                              components={{ text: TextWithHighlights }}
+                            >
+                              {popup.explanation}
+                            </ReactMarkdown>
+                          </Box>
+                        ) : popup.loading ? (
+                          <Box className="mini-chat-popup-loading">
+                            <CircularProgress size={14} />
+                            <Typography variant="caption">Generating explanationÃ¢â‚¬Â¦</Typography>
+                          </Box>
+                        ) : (
+                          <Typography variant="body2" className="mini-chat-popup-empty">
+                            Explanation unavailable.
+                          </Typography>
+                        )}
+                      </Box>
+                      <Divider className="mini-chat-popup-section-divider" />
+                      <Box className="mini-chat-popup-section">
+                        <Typography variant="caption" className="mini-chat-popup-label">
+                          Extra Insight
+                        </Typography>
+                        {hasExtra ? (
+                          <Box className="mini-chat-popup-markdown">
+                            <ReactMarkdown
+                              remarkPlugins={[remarkGfm, remarkMath]}
+                              rehypePlugins={[rehypeKatex]}
+                              components={{ text: TextWithHighlights }}
+                            >
+                              {popup.extraResponse}
+                            </ReactMarkdown>
+                          </Box>
+                        ) : popup.loading ? (
+                          <Box className="mini-chat-popup-loading">
+                            <CircularProgress size={14} />
+                            <Typography variant="caption">Finding more insightsÃ¢â‚¬Â¦</Typography>
+                          </Box>
+                        ) : (
+                          <Typography variant="body2" className="mini-chat-popup-empty">
+                            No additional insight generated.
+                          </Typography>
+                        )}
+                      </Box>
+                    </>
+                  )}
+                </Box>
+              </Box>
+            );
+          })}
         </Box>
       )}
 
@@ -1114,8 +1654,8 @@ const Chatbot = ({ user, onLogout }) => {
 
               {verifyLoading ? (
                 <Box className="verify-popover-loading">
-                  <CircularProgress size={16} sx={{ color: '#6c7dff', mr: 1 }} />
-                  <Typography variant="body2">Searching the web…</Typography>
+                  <CircularProgress size={16} sx={{ color: 'var(--text-primary)', mr: 1 }} />
+                  <Typography variant="body2">Searching the webÃ¢â‚¬Â¦</Typography>
                 </Box>
               ) : verifyError ? (
                 <Typography variant="body2" className="verify-popover-error">
@@ -1172,31 +1712,37 @@ const Chatbot = ({ user, onLogout }) => {
               </IconButton>
             </Box>
             <Divider className="mini-chat-divider" />
-            {miniChatMessages.map((msg, index) => (
-              <Box
-                key={index}
-                className="mini-chat-message-box"
-                sx={{ justifyContent: msg.sender === 'user' ? 'flex-end' : 'flex-start' }}
-              >
+            <Box onMouseUp={(e) => handleTextSelect(e, null, 'mini-chat')}>
+              {miniChatMessages.map((msg, index) => (
                 <Box
-                  className={
-                    msg.sender === 'user' ? 'mini-chat-user-message-bubble' : 'mini-chat-bot-message-bubble'
-                  }
+                  key={index}
+                  className="mini-chat-message-box"
+                  sx={{ justifyContent: msg.sender === 'user' ? 'flex-end' : 'flex-start' }}
                 >
-                  <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeKatex]}>
-                    {msg.text}
-                  </ReactMarkdown>
+                  <Box
+                    className={
+                      msg.sender === 'user' ? 'mini-chat-user-message-bubble' : 'mini-chat-bot-message-bubble'
+                    }
+                  >
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm, remarkMath]}
+                      rehypePlugins={[rehypeKatex]}
+                      components={{ text: TextWithHighlights }}
+                    >
+                      {msg.text}
+                    </ReactMarkdown>
+                  </Box>
                 </Box>
-              </Box>
-            ))}
-            {miniChatLoading && (
-              <Box className="mini-chat-loader-box">
-                <Box className="mini-chat-loader-bubble">
-                  <CircularProgress size={16} sx={{ color: '#6c7dff', mr: 1 }} />
-                  Typing...
+              ))}
+              {miniChatLoading && (
+                <Box className="mini-chat-loader-box">
+                  <Box className="mini-chat-loader-bubble">
+                    <CircularProgress size={16} sx={{ color: 'var(--text-primary)', mr: 1 }} />
+                    Typing...
+                  </Box>
                 </Box>
-              </Box>
-            )}
+              )}
+            </Box>
           </Box>
 
           <Box className="mini-chat-input-area">
@@ -1253,3 +1799,6 @@ const Chatbot = ({ user, onLogout }) => {
 };
 
 export default Chatbot;
+
+
+

@@ -1,7 +1,8 @@
-import React, { Suspense, useState, useEffect } from 'react';
+import React, { Suspense, useState, useEffect, useCallback } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import './App.css';
 const LazyChatbot = React.lazy(() => import('./components/Chatbot'));
 import Loader from './components/Loader';
 import Login from './components/Login'; // Import Login component
@@ -10,6 +11,12 @@ import api from './api/apiUrl'; // Import api to check login status
 
 function App() {
     const [user, setUser] = useState(null); // User state
+    const [themeMode, setThemeMode] = useState(() => {
+        if (typeof window === 'undefined') {
+            return 'light';
+        }
+        return localStorage.getItem('stellar_theme') || 'light';
+    });
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -43,6 +50,17 @@ function App() {
         }
     }, []);
 
+    useEffect(() => {
+        if (typeof document !== 'undefined') {
+            document.documentElement.setAttribute('data-theme', themeMode);
+        }
+        localStorage.setItem('stellar_theme', themeMode);
+    }, [themeMode]);
+
+    const toggleTheme = useCallback(() => {
+        setThemeMode((prev) => (prev === 'dark' ? 'light' : 'dark'));
+    }, []);
+
     const handleLogin = (username) => {
         setUser({ username });
         localStorage.setItem('user', JSON.stringify({ username }));
@@ -60,7 +78,7 @@ function App() {
     };
 
     return (
-        <div className="font-display min-h-screen" style={{ backgroundColor: '#213F3E' }}>
+        <div className="font-display min-h-screen" style={{ backgroundColor: 'var(--page-bg)', color: 'var(--text-primary)' }}>
             <ToastContainer
                 position="top-right"
                 autoClose={3000}
@@ -71,14 +89,25 @@ function App() {
                 pauseOnFocusLoss
                 draggable
                 pauseOnHover
-                theme="light"
+                theme={themeMode === 'dark' ? 'dark' : 'light'}
                 style={{ zIndex: 9999 }}
             />
             <Suspense fallback={<Loader />}>
                 <Routes>
                     <Route
                         path="/"
-                        element={user ? <LazyChatbot user={user} onLogout={handleLogout} /> : <Login onLogin={handleLogin} />}
+                        element={
+                            user ? (
+                                <LazyChatbot
+                                    user={user}
+                                    onLogout={handleLogout}
+                                    themeMode={themeMode}
+                                    onToggleTheme={toggleTheme}
+                                />
+                            ) : (
+                                <Login onLogin={handleLogin} />
+                            )
+                        }
                     />
                     <Route path="/login" element={<Login onLogin={handleLogin} />} />
                     <Route path="/signup" element={<Signup />} />

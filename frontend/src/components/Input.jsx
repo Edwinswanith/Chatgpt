@@ -27,10 +27,12 @@ const Input = ({ setInput, handleSendMessage, loading, input, files, handleFileC
                     sx={{ color: '#e0e0e0', bgcolor: '#555' }}
 =======
                     sx={{
-                        color: '#334155',
-                        bgcolor: 'rgba(99, 102, 241, 0.14)',
-                        borderRadius: '14px',
-                        border: '1px solid rgba(99, 102, 241, 0.24)'
+                        color: 'var(--text-primary)',
+                        bgcolor: 'rgba(var(--color-soft-rgb), 0.28)',
+                        borderRadius: '16px',
+                        border: '1px solid rgba(var(--color-mid-rgb), 0.26)',
+                        backdropFilter: 'blur(6px)',
+                        '& .MuiChip-deleteIcon': { color: 'var(--chip-delete-color)' }
                     }}
 >>>>>>> 182dae9 (Update)
                 />
@@ -39,6 +41,7 @@ const Input = ({ setInput, handleSendMessage, loading, input, files, handleFileC
       <Box sx={{
         display: 'flex',
         alignItems: 'center',
+<<<<<<< HEAD
 <<<<<<< HEAD
         bgcolor: '#1b2625',
         borderRadius: '25px',
@@ -52,6 +55,14 @@ const Input = ({ setInput, handleSendMessage, loading, input, files, handleFileC
         border: '1px solid rgba(148, 163, 184, 0.24)',
         backdropFilter: 'blur(12px)'
 >>>>>>> 182dae9 (Update)
+=======
+        bgcolor: 'rgba(var(--color-light-rgb), 0.96)',
+        borderRadius: '28px',
+        p: '8px 24px',
+        boxShadow: '0 20px 44px rgba(var(--color-deep-rgb), 0.18)',
+        border: '1px solid rgba(var(--color-mid-rgb), 0.32)',
+        backdropFilter: 'blur(16px)'
+>>>>>>> b32dba6 (changed ui)
       }}>
         <input
           type="file"
@@ -62,10 +73,14 @@ const Input = ({ setInput, handleSendMessage, loading, input, files, handleFileC
           multiple
         />
 <<<<<<< HEAD
+<<<<<<< HEAD
         <IconButton sx={{ color: '#e0e0e0', p: 0, mr: 1.5 }} onClick={handleAttachClick}>
 =======
         <IconButton sx={{ color: '#64748b', p: 0, mr: 1.5 }} onClick={handleAttachClick}>
 >>>>>>> 182dae9 (Update)
+=======
+        <IconButton sx={{ color: 'var(--placeholder-color)' , p: 0, mr: 1.5 }} onClick={handleAttachClick}>
+>>>>>>> b32dba6 (changed ui)
           <AttachFileIcon />
         </IconButton>
 
@@ -87,8 +102,8 @@ const Input = ({ setInput, handleSendMessage, loading, input, files, handleFileC
             }}
 >>>>>>> 2cb9e50 (Added verification feature)
             sx={{
-                input: { color: '#1f2937' },
-                '& .MuiInputBase-input::placeholder': { color: 'rgba(100, 116, 139, 0.9)', opacity: 1 }
+                input: { color: 'var(--text-primary)' },
+                '& .MuiInputBase-input::placeholder': { color: 'var(--placeholder-color)' , opacity: 1 }
             }}
 >>>>>>> 182dae9 (Update)
         />
@@ -98,6 +113,7 @@ const Input = ({ setInput, handleSendMessage, loading, input, files, handleFileC
             disabled={loading}
             sx={{
                 ml: 1.5,
+<<<<<<< HEAD
 <<<<<<< HEAD
                 p: '8px 16px',
                 bgcolor: '#61A366',
@@ -116,6 +132,17 @@ const Input = ({ setInput, handleSendMessage, loading, input, files, handleFileC
                 color: '#fff',
                 boxShadow: '0 16px 36px rgba(100, 126, 255, 0.35)'
 >>>>>>> 182dae9 (Update)
+=======
+                p: '10px 24px',
+                background: 'linear-gradient(135deg, rgba(var(--color-deep-rgb), 0.8) 0%, rgba(var(--color-mid-rgb), 0.8) 100%)',
+                '&:hover': { background: 'linear-gradient(135deg, rgba(var(--color-deep-rgb), 0.88) 0%, rgba(var(--color-mid-rgb), 0.84) 100%)' },
+                borderRadius: '999px',
+                textTransform: 'none',
+                fontSize: '1rem',
+                color: 'var(--text-inverse)',
+                fontWeight: 600,
+                boxShadow: '0 22px 46px rgba(79, 70, 46, 0.24)'
+>>>>>>> b32dba6 (changed ui)
             }}
         >
             Send
@@ -126,3 +153,8 @@ const Input = ({ setInput, handleSendMessage, loading, input, files, handleFileC
 }
 
 export default Input;
+
+
+
+
+

@@ -2,25 +2,27 @@ import { createTheme } from '@mui/material/styles';
 
 const theme = createTheme({
   palette: {
-    primary: {
-      main: '#1976d2', // A shade of blue
-    },
-    secondary: {
-      main: '#9e9e9e', // A shade of gray
-    },
-    background: {
-      default: '#f4f6f8',
-      paper: '#ffffff',
+    primary: { main: '#6F765B' },
+    secondary: { main: '#D7CBB8' },
+    background: { default: '#F6F1E7', paper: '#FFFFFF' },
+    text: {
+      primary: '#2F2A24',
+      secondary: 'rgba(47, 42, 36, 0.72)',
     },
   },
   typography: {
+    fontFamily: "'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif",
     h4: {
-      fontSize: '1.8rem',
+      fontFamily: "'Playfair Display', 'Times New Roman', serif",
+      fontSize: '2rem',
       fontWeight: 600,
+      letterSpacing: '-0.01em',
     },
     h6: {
+      fontFamily: "'Playfair Display', 'Times New Roman', serif",
       fontSize: '1.2rem',
       fontWeight: 500,
+      letterSpacing: '-0.005em',
     },
     body1: {
       fontSize: '1rem',
@@ -34,33 +36,36 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           textTransform: 'none',
-          borderRadius: '20px',
+          borderRadius: '24px',
+          fontWeight: 500,
+          padding: '10px 24px',
         },
       },
     },
     MuiAppBar: {
       styleOverrides: {
         root: {
-          backgroundColor: '#ffffff',
-          color: '#333333',
+          backgroundColor: '#F6F1E7',
+          color: '#2F2A24',
           boxShadow: 'none',
-          borderBottom: '1px solid #e0e0e0',
+          borderBottom: '1px solid rgba(99, 106, 82, 0.12)',
+          paddingInline: '8px',
         },
       },
     },
     MuiDrawer: {
       styleOverrides: {
         paper: {
-          borderRight: '1px solid #e0e0e0',
+          borderRight: '1px solid rgba(0, 0, 0, 0.08)',
         },
       },
     },
     MuiListItem: {
       styleOverrides: {
         root: {
-          borderRadius: '5px',
+          borderRadius: '18px',
           '&:hover': {
-            backgroundColor: 'rgba(0, 0, 0, 0.04)',
+            backgroundColor: 'rgba(215, 203, 184, 0.22)',
           },
         },
       },

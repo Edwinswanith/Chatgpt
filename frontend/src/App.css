@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 /* No custom CSS needed for general layout as MUI handles it. */
 
 /* Adjustments for ReactMarkdown rendering */
@@ -23,26 +24,234 @@
 
 /* Additional styles for loading and error screens if they are not entirely MUI-based */
 =======
+=======
+/* Inter Variable Font */
+@font-face {
+  font-family: 'InterVariable';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/inter/InterVariable.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'InterVariable';
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/inter/InterVariable-Italic.woff2') format('woff2');
+}
+
+/* Inter Static Fonts */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100;
+  font-display: swap;
+  src: url('/fonts/inter/Inter-Thin.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: italic;
+  font-weight: 100;
+  font-display: swap;
+  src: url('/fonts/inter/Inter-ThinItalic.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 200;
+  font-display: swap;
+  src: url('/fonts/inter/Inter-ExtraLight.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: italic;
+  font-weight: 200;
+  font-display: swap;
+  src: url('/fonts/inter/Inter-ExtraLightItalic.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('/fonts/inter/Inter-Light.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: italic;
+  font-weight: 300;
+  font-display: swap;
+  src: url('/fonts/inter/Inter-LightItalic.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/inter/Inter-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/inter/Inter-Italic.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/inter/Inter-Medium.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/inter/Inter-MediumItalic.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/inter/Inter-SemiBold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: italic;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/inter/Inter-SemiBoldItalic.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/inter/Inter-Bold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/inter/Inter-BoldItalic.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/inter/Inter-ExtraBold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: italic;
+  font-weight: 800;
+  font-display: swap;
+  src: url('/fonts/inter/Inter-ExtraBoldItalic.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url('/fonts/inter/Inter-Black.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: italic;
+  font-weight: 900;
+  font-display: swap;
+  src: url('/fonts/inter/Inter-BlackItalic.woff2') format('woff2');
+}
+
+:root {
+  --color-deep: #6B705C;
+  --color-mid: #888B74;
+  --color-soft: #A5A795;
+  --color-light: #F5F3EB;
+  --color-sand: #D4C7B7;
+  --color-deep-rgb: 107, 112, 92;
+  --color-mid-rgb: 136, 139, 116;
+  --color-soft-rgb: 165, 167, 149;
+  --color-light-rgb: 245, 243, 235;
+  --color-sand-rgb: 212, 199, 183;
+  --page-bg: var(--color-light);
+  --page-gradient-a: rgba(var(--color-sand-rgb), 0.55);
+  --page-gradient-b: rgba(var(--color-soft-rgb), 0.55);
+  --surface-base: rgba(var(--color-light-rgb), 0.96);
+  --surface-panel: rgba(var(--color-soft-rgb), 0.92);
+  --surface-card: rgba(var(--color-sand-rgb), 0.88);
+  --surface-popover: rgba(255, 255, 255, 0.95);
+  --surface-subtle: rgba(var(--color-sand-rgb), 0.35);
+  --surface-glass: rgba(var(--color-soft-rgb), 0.6);
+  --border-subtle: rgba(var(--color-deep-rgb), 0.12);
+  --border-strong: rgba(var(--color-deep-rgb), 0.26);
+  --border-pop: rgba(var(--color-mid-rgb), 0.42);
+  --shadow-lg: 0 32px 60px -28px rgba(107, 112, 92, 0.26);
+  --shadow-md: 0 18px 44px -24px rgba(107, 112, 92, 0.18);
+  --shadow-sm: 0 12px 28px rgba(107, 112, 92, 0.12);
+  --text-primary: #2f2a24;
+  --text-secondary: rgba(47, 42, 36, 0.82);
+  --text-muted: rgba(47, 42, 36, 0.62);
+  --text-inverse: #F5F3EB;
+  --accent-primary: #6B705C;
+  --accent-secondary: var(--color-sand);
+  --accent-tertiary: var(--color-deep);
+  --accent-gradient: linear-gradient(125deg, rgba(107, 112, 92, 0.95) 0%, rgba(var(--color-deep-rgb), 0.82) 100%);
+  --danger: #c15b4c;
+  --success: #7a8364;
+  --font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-heading: 'Playfair Display', 'Times New Roman', serif;
+  --transition: 0.28s cubic-bezier(.2, .8, .2, 1);
+  --radius-lg: 24px;
+  --radius-md: 18px;
+  --radius-sm: 12px;
+}
+
+>>>>>>> b32dba6 (changed ui)
 /* Premium light theme adjustments for markdown content */
 
 .chat-message.bot .message-content ul,
 .chat-message.bot .message-content ol {
   margin-left: 20px;
-  color: #1f2937;
+  color: var(--text-secondary);
 }
 
 .chat-message.bot .message-content pre {
-  background: linear-gradient(135deg, #f3f5ff 0%, #eef7ff 100%);
+  background: linear-gradient(135deg, rgba(var(--color-soft-rgb), 0.85) 0%, rgba(var(--color-light-rgb), 0.95) 100%);
   padding: 14px;
   border-radius: 14px;
   overflow-x: auto;
-  color: #1f2937;
-  box-shadow: inset 0 0 0 1px rgba(99, 102, 241, 0.08);
+  color: var(--text-primary);
+  box-shadow: inset 0 0 0 1px rgba(var(--color-sand-rgb), 0.18);
 }
 
 .chat-message.bot .message-content code {
   font-family: 'Fira Code', 'Source Code Pro', monospace;
-  color: #4338ca;
+  color: var(--accent-tertiary);
 }
 
 >>>>>>> 182dae9 (Update)
@@ -52,6 +261,7 @@
   justify-content: center;
   align-items: center;
   font-size: 1.5em;
+<<<<<<< HEAD
 <<<<<<< HEAD
   color: #e0e0e0; /* Light gray text for dark background */
 }
@@ -64,15 +274,58 @@
   background-color: #5b799b; /* A darker blue for highlights */
 =======
   color: #1f2937;
+=======
+  color: var(--text-inverse);
+>>>>>>> b32dba6 (changed ui)
 }
 
 .main-layout.error-screen {
-  color: #f97316;
+  color: var(--accent-tertiary);
 }
 
 .highlight {
-  background: rgba(129, 140, 248, 0.28);
+  background: rgba(var(--color-sand-rgb), 0.38);
   border-radius: 6px;
 >>>>>>> 182dae9 (Update)
   cursor: pointer;
+}
+
+[data-theme="dark"] {
+  --color-deep: #6B705C;
+  --color-mid: #888B74;
+  --color-soft: #A5A795;
+  --color-light: #3A3832;
+  --color-sand: #4A4840;
+  --color-deep-rgb: 107, 112, 92;
+  --color-mid-rgb: 136, 139, 116;
+  --color-soft-rgb: 165, 167, 149;
+  --color-light-rgb: 58, 56, 50;
+  --color-sand-rgb: 74, 72, 64;
+  --page-bg: var(--color-light);
+  --page-gradient-a: rgba(107, 112, 92, 0.3);
+  --page-gradient-b: rgba(58, 56, 50, 0.95);
+  --surface-base: rgba(74, 72, 64, 0.92);
+  --surface-panel: rgba(58, 56, 50, 0.86);
+  --surface-card: rgba(107, 112, 92, 0.25);
+  --surface-popover: rgba(58, 56, 50, 0.95);
+  --surface-subtle: rgba(107, 112, 92, 0.28);
+  --surface-glass: rgba(136, 139, 116, 0.3);
+  --border-subtle: rgba(165, 167, 149, 0.25);
+  --border-strong: rgba(165, 167, 149, 0.35);
+  --border-pop: rgba(136, 139, 116, 0.5);
+  --shadow-lg: 0 28px 62px -24px rgba(0, 0, 0, 0.65);
+  --shadow-md: 0 18px 48px -24px rgba(0, 0, 0, 0.5);
+  --shadow-sm: 0 12px 30px rgba(0, 0, 0, 0.4);
+  --text-primary: #F5F3EB;
+  --text-secondary: rgba(245, 243, 235, 0.78);
+  --text-muted: rgba(245, 243, 235, 0.58);
+  --text-inverse: #F5F3EB;
+  --accent-primary: #888B74;
+  --accent-secondary: #A5A795;
+  --accent-tertiary: #6B705C;
+  --accent-gradient: linear-gradient(135deg, rgba(136, 139, 116, 0.95) 0%, rgba(107, 112, 92, 0.95) 100%);
+  --danger: #ff8a7a;
+  --success: #7a8364;
+  --placeholder-color: rgba(245, 243, 235, 0.6);
+  --chip-delete-color: rgba(245, 243, 235, 0.68);
 }

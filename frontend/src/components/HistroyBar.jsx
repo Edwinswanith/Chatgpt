@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { toast } from 'react-toastify';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import SettingsIcon from '@mui/icons-material/Settings';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
+import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
+import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -19,7 +20,15 @@ import {
 import api from '../api/apiUrl';
 import './HistroyBar.css'; // Import HistroyBar.css
 
-const HistroyBar = ({ startNewChat, onSelectSession, isPending, onLogout, username }) => {
+const HistroyBar = ({
+    startNewChat,
+    onSelectSession,
+    isPending,
+    onLogout,
+    username,
+    onToggleTheme = () => {},
+    themeMode = 'light',
+}) => {
     const [sessions, setSessions] = useState([]);
     const [refresh, setRefresh] = useState(0);
 
@@ -122,9 +131,13 @@ const HistroyBar = ({ startNewChat, onSelectSession, isPending, onLogout, userna
                     </Button>
                 </ListItem>
                 <ListItem className="history-list-item">
-                    <Button className="history-list-item-button">
-                        <Brightness4Icon sx={{ mr: 1 }} />
-                        <ListItemText primary="Dark Theme" />
+                    <Button className="history-list-item-button" onClick={onToggleTheme}>
+                        {themeMode === 'dark' ? (
+                            <LightModeOutlinedIcon sx={{ mr: 1 }} />
+                        ) : (
+                            <DarkModeOutlinedIcon sx={{ mr: 1 }} />
+                        )}
+                        <ListItemText primary={themeMode === 'dark' ? 'Light Theme' : 'Dark Theme'} />
                     </Button>
                 </ListItem>
                 <Button
