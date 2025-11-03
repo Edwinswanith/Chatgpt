@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, stream_with_context, Response, session, g, current_app
+from flask import Flask, request, jsonify, stream_with_context, Response, current_app
 from flask_cors import CORS
 import os
 from dotenv import load_dotenv
@@ -13,11 +13,11 @@ from utility.create_db import create_database
 from utility.google_genai import generate_text_from_genai, configure_genai, generate_chat_content_stream, generate_mini_chat_content_stream, prepare_chat_input_parts
 from utility.chat_memory import get_chat_history, append_to_chat_history
 from utility.serper import search_serper, SerperConfigurationError
-from werkzeug.security import generate_password_hash, check_password_hash # Import security utilities
 
 load_dotenv()
 
 app = Flask(__name__)
+<<<<<<< HEAD
 app.secret_key = os.getenv('SECRET_KEY') or os.environ.get('SECRET_KEY', 'supersecretkey') # Secret key for session management
 <<<<<<< HEAD
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'
@@ -32,9 +32,14 @@ app.config['SESSION_COOKIE_HTTPONLY'] = True
 CORS(app, resources={r"/*":{
     "origins": ["http://localhost:5173", "http://localhost:5000", "http://127.0.0.1:5173"],
 >>>>>>> 182dae9 (Update)
+=======
+# CORS configuration for dev tunnel
+CORS(app, resources={r"/*":{
+    "origins": ["https://340v23tv-5173.inc1.devtunnels.ms"],  # Frontend dev tunnel URL
+>>>>>>> b35048a (removed login page)
     "methods": ["GET", "POST", "DELETE", "PUT", "OPTIONS"],
     "allow_headers": ["Content-Type", "Authorization"],
-    "supports_credentials": True
+    "supports_credentials": True  # Must be True when frontend uses withCredentials
 }})
 
 # Configure Database
@@ -47,10 +52,20 @@ DB_Message, DB_User, DB_HighlightedPhrase, DB_MiniChatConversation = create_data
 # Configure Generative AI
 configure_genai()
 
+def get_default_user():
+    """Get or create a default anonymous user for the application"""
+    default_user = DB_User.query.filter_by(username='anonymous').first()
+    if not default_user:
+        default_user = DB_User(username='anonymous', password='')
+        db.session.add(default_user)
+        db.session.commit()
+    return default_user
+
 @app.before_request
 def create_tables():
     db.create_all()
 
+<<<<<<< HEAD
 @app.route('/register', methods=['POST'])
 def register():
     username = request.json.get('username')
@@ -119,27 +134,27 @@ def login_required(view):
         return view(**kwargs)
     return wrapped_view
 
+=======
+>>>>>>> b35048a (removed login page)
 
 @app.route('/')
 def index():
     return "<h1>Welcome to the Chat Application Backend</h1>"
 
 @app.route('/sessions', methods=['GET'])
-@login_required
 def get_sessions():
-    sessions = db.session.query(DB_Message.session_id, db.func.max(DB_Message.timestamp)).filter(DB_Message.context_type == 'general_chat', DB_Message.user_id == g.user.id).group_by(DB_Message.session_id).order_by(db.func.max(DB_Message.timestamp).desc()).all()
+    sessions = db.session.query(DB_Message.session_id, db.func.max(DB_Message.timestamp)).filter(DB_Message.context_type == 'general_chat').group_by(DB_Message.session_id).order_by(db.func.max(DB_Message.timestamp).desc()).all()
     return jsonify([session[0] for session in sessions])
 
 @app.route('/history', methods=['GET'])
-@login_required
 def get_history():
     session_id = request.args.get('sessionId')
 
     if not session_id:
         return jsonify({'error': 'Session ID not provided'}), 400
 
-    messages = DB_Message.query.filter_by(session_id=session_id, context_type='general_chat', user_id=g.user.id).order_by(DB_Message.timestamp).all()
-    highlights = DB_HighlightedPhrase.query.filter_by(session_id=session_id, user_id=g.user.id).all()
+    messages = DB_Message.query.filter_by(session_id=session_id, context_type='general_chat').order_by(DB_Message.timestamp).all()
+    highlights = DB_HighlightedPhrase.query.filter_by(session_id=session_id).all()
 
     return jsonify({
         'messages': [msg.to_dict() for msg in messages],
@@ -147,10 +162,9 @@ def get_history():
     })
 
 @app.route('/history/<session_id>', methods=['DELETE'])
-@login_required
 def delete_history(session_id):
     try:
-        messages_to_delete = DB_Message.query.filter_by(session_id=session_id, context_type='general_chat', user_id=g.user.id).all()
+        messages_to_delete = DB_Message.query.filter_by(session_id=session_id, context_type='general_chat').all()
         for message in messages_to_delete:
             db.session.delete(message)
         db.session.commit()
@@ -160,7 +174,6 @@ def delete_history(session_id):
         return jsonify({'error': str(e)}), 500
 
 @app.route('/chat', methods=['POST'])
-@login_required
 def chat():
     try:
         user_message_text = request.json.get('message')
@@ -182,9 +195,11 @@ def chat():
 
         combined_pdf_text = ""
 
+        default_user = get_default_user()
+        
         # Retrieve existing chat history before appending the new message.
         # This will be an empty list if no history exists for the session.
-        full_chat_history = get_chat_history(g.user.id, session_id, DB_Message, db)
+        full_chat_history = get_chat_history(default_user.id, session_id, DB_Message, db)
 
         # Prepare the user message for the model input, including any images
         user_message_for_model_parts, is_visible_wanted = prepare_chat_input_parts(user_message_text, images_data)
@@ -194,7 +209,7 @@ def chat():
         # so we just add the text part of the message to the database.
         if user_message_text or images_data: # Only add if there's actual content
             append_to_chat_history(
-                g.user.id,
+                default_user.id,
                 session_id,
                 'user',
                 user_message_content,
@@ -220,7 +235,7 @@ def chat():
         # Commit the user message to the database before generating response
         # This is already handled by append_to_chat_history
         
-        user_id_for_bot_message = g.user.id # Capture user_id before entering the streaming context
+        user_id_for_bot_message = default_user.id # Capture user_id before entering the streaming context
 
         def generate_content():
             try:
@@ -256,7 +271,6 @@ def chat():
         return jsonify({'error': f"Internal server error: {str(e)}"}), 500
 
 @app.route('/ask_selection', methods=['POST'])
-@login_required
 def ask_selection():
     selected_text = request.json.get('text')
     if not selected_text:
@@ -265,16 +279,16 @@ def ask_selection():
     new_context_id = str(uuid4()) # Generate a new UUID for this selected text chat
 
     try:
+        default_user = get_default_user()
         prompt = f"Explain this: {selected_text}"
         bot_response_text = generate_text_from_genai(prompt)
 
         # Store the initial user query (selected text) and bot response
-        user_message = DB_Message(text=f"Selected text: {selected_text}", sender='user', context_id=new_context_id, context_type='selection_chat', user_id=g.user.id)
-        bot_message = DB_Message(text=bot_response_text, sender='bot', context_id=new_context_id, context_type='selection_chat', user_id=g.user.id)
+        user_message = DB_Message(text=f"Selected text: {selected_text}", sender='user', context_id=new_context_id, context_type='selection_chat', user_id=default_user.id)
+        bot_message = DB_Message(text=bot_response_text, sender='bot', context_id=new_context_id, context_type='selection_chat', user_id=default_user.id)
         db.session.add(user_message)
         db.session.add(bot_message)
         db.session.commit()
-        db.session.refresh(g.user) # Re-bind g.user to the session after commit
 
         return jsonify({'response': bot_response_text, 'context_id': new_context_id}), 200
     except Exception as e:
@@ -283,7 +297,6 @@ def ask_selection():
         return jsonify({'error': str(e)}), 500
 
 @app.route('/mini_chat', methods=['POST'])
-@login_required
 def mini_chat():
     data = request.json
     selected_text = data.get('text')
@@ -294,11 +307,12 @@ def mini_chat():
     if not selected_text or not query or not context_id:
         return jsonify({'error': 'Missing text, query or context_id'}), 400
 
+    default_user = get_default_user()
+
     # Store the user's message immediately
-    user_message_db = DB_Message(text=query, sender='user', context_id=context_id, context_type='selection_chat', user_id=g.user.id)
+    user_message_db = DB_Message(text=query, sender='user', context_id=context_id, context_type='selection_chat', user_id=default_user.id)
     db.session.add(user_message_db)
     db.session.commit()
-    db.session.refresh(g.user) # Re-bind g.user to the session after commit
 
     def generate_mini_chat_content():
         try:
@@ -321,7 +335,7 @@ def mini_chat():
                     yield chunk.text
 
             # Store the complete bot message after streaming
-            bot_message_db = DB_Message(text="".join(full_bot_message_text), sender='bot', context_id=context_id, context_type='selection_chat', user_id=g.user.id)
+            bot_message_db = DB_Message(text="".join(full_bot_message_text), sender='bot', context_id=context_id, context_type='selection_chat', user_id=default_user.id)
             with app.app_context():
                 db.session.add(bot_message_db)
                 db.session.commit()
@@ -335,7 +349,6 @@ def mini_chat():
 
 
 @app.route('/verify_text', methods=['POST'])
-@login_required
 def verify_text():
     payload = request.json or {}
     selected_text = (payload.get('text') or '').strip()
@@ -354,7 +367,6 @@ def verify_text():
         return jsonify({'error': 'Failed to verify text'}), 500
 
 @app.route('/save_highlight', methods=['POST'])
-@login_required
 def save_highlight():
     data = request.json
     phrase = data.get('phrase')
@@ -365,6 +377,8 @@ def save_highlight():
     if not phrase or not context_id or not session_id:
         return jsonify({'error': 'Missing phrase, context_id, or session_id'}), 400
 
+    default_user = get_default_user()
+
     sanitized_messages = []
     for msg in messages_payload:
         sender = msg.get('sender')
@@ -374,8 +388,8 @@ def save_highlight():
         normalized_sender = 'bot' if sender in ('bot', 'model') else 'user'
         sanitized_messages.append({'sender': normalized_sender, 'text': text})
 
-    existing_highlight = DB_HighlightedPhrase.query.filter_by(context_id=context_id, user_id=g.user.id).first()
-    conversation_record = DB_MiniChatConversation.query.filter_by(context_id=context_id, user_id=g.user.id).first()
+    existing_highlight = DB_HighlightedPhrase.query.filter_by(context_id=context_id, user_id=default_user.id).first()
+    conversation_record = DB_MiniChatConversation.query.filter_by(context_id=context_id, user_id=default_user.id).first()
 
     try:
         if existing_highlight:
@@ -388,7 +402,7 @@ def save_highlight():
                 phrase=phrase,
                 context_id=context_id,
                 session_id=session_id,
-                user_id=g.user.id
+                user_id=default_user.id
             )
             db.session.add(new_highlight)
             response_status = 201
@@ -401,7 +415,7 @@ def save_highlight():
                 conversation_record.messages = sanitized_messages
             else:
                 new_conversation = DB_MiniChatConversation(
-                    user_id=g.user.id,
+                    user_id=default_user.id,
                     session_id=session_id,
                     context_id=context_id,
                     phrase=phrase,
@@ -414,14 +428,13 @@ def save_highlight():
             conversation_record.session_id = session_id
 
         db.session.commit()
-        db.session.refresh(g.user)
 
-        highlight_record = DB_HighlightedPhrase.query.filter_by(context_id=context_id, user_id=g.user.id).first()
+        highlight_record = DB_HighlightedPhrase.query.filter_by(context_id=context_id, user_id=default_user.id).first()
         conversation_json = None
         if conversation_record:
             conversation_json = conversation_record.to_dict()
         elif sanitized_messages:
-            conversation_record = DB_MiniChatConversation.query.filter_by(context_id=context_id, user_id=g.user.id).first()
+            conversation_record = DB_MiniChatConversation.query.filter_by(context_id=context_id, user_id=default_user.id).first()
             if conversation_record:
                 conversation_json = conversation_record.to_dict()
 
@@ -438,9 +451,9 @@ def save_highlight():
 
 
 @app.route('/mini_chat/history/<context_id>', methods=['GET'])
-@login_required
 def get_saved_mini_chat(context_id):
-    conversation = DB_MiniChatConversation.query.filter_by(context_id=context_id, user_id=g.user.id).first()
+    default_user = get_default_user()
+    conversation = DB_MiniChatConversation.query.filter_by(context_id=context_id, user_id=default_user.id).first()
     if conversation:
         return jsonify({
             'messages': conversation.messages,
@@ -451,7 +464,7 @@ def get_saved_mini_chat(context_id):
     messages = DB_Message.query.filter_by(
         context_id=context_id,
         context_type='selection_chat',
-        user_id=g.user.id
+        user_id=default_user.id
     ).order_by(DB_Message.timestamp).all()
 
     if messages:
@@ -469,4 +482,5 @@ def get_saved_mini_chat(context_id):
 
 
 if __name__ == '__main__':
-    app.run(debug=True) 
+    # Run on all interfaces (0.0.0.0) to allow dev tunnel access
+    app.run(host='0.0.0.0', port=5000, debug=True) 

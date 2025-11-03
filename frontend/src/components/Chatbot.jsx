@@ -251,7 +251,7 @@ const makeTextRenderer = (tempPhrases, savedPhrasesWithCtx, onSavedHighlightClic
   };
 };
 
-const Chatbot = ({ user, onLogout, themeMode = 'light', onToggleTheme = () => {} }) => {
+const Chatbot = ({ themeMode = 'light', onToggleTheme = () => {} }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [sessionId, setSessionId] = useState(null);
@@ -623,12 +623,12 @@ const Chatbot = ({ user, onLogout, themeMode = 'light', onToggleTheme = () => {}
   );
 
   useEffect(() => {
-    if (user && !sessionId) {
+    if (!sessionId) {
       startNewChat();
-    } else if (user && sessionId) {
+    } else {
       fetchHistory(sessionId);
     }
-  }, [sessionId, startNewChat, user, fetchHistory]);
+  }, [sessionId, startNewChat, fetchHistory]);
 
   useEffect(() => {
     miniChatPopupsRef.current = miniChatPopups;
@@ -1382,8 +1382,6 @@ const Chatbot = ({ user, onLogout, themeMode = 'light', onToggleTheme = () => {}
           startNewChat={startNewChat}
           onSelectSession={selectSession}
           isPending={historyLoading}
-          onLogout={onLogout}
-          username={user?.username || ""}
           onToggleTheme={onToggleTheme}
           themeMode={themeMode}
         />
@@ -1429,9 +1427,6 @@ const Chatbot = ({ user, onLogout, themeMode = 'light', onToggleTheme = () => {}
               <IconButton color="inherit" onClick={onToggleTheme} className="theme-toggle-icon">
                 {themeMode === 'dark' ? <LightModeOutlinedIcon /> : <DarkModeOutlinedIcon />}
               </IconButton>
-            </Tooltip>
-            <Tooltip title={user?.username || ""}>
-              <Avatar className="chat-avatar">{(user?.username || "?").charAt(0).toUpperCase()}</Avatar>
             </Tooltip>
           </Toolbar>
         </AppBar>

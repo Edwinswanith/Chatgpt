@@ -5,7 +5,6 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
 import RefreshIcon from '@mui/icons-material/Refresh';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {
     Box,
@@ -24,8 +23,6 @@ const HistroyBar = ({
     startNewChat,
     onSelectSession,
     isPending,
-    onLogout,
-    username,
     onToggleTheme = () => {},
     themeMode = 'light',
 }) => {
@@ -140,13 +137,6 @@ const HistroyBar = ({
                         <ListItemText primary={themeMode === 'dark' ? 'Light Theme' : 'Dark Theme'} />
                     </Button>
                 </ListItem>
-                <Button
-                    startIcon={<ArrowBackIcon />}
-                    onClick={onLogout}
-                    className="logout-button"
-                >
-                    Logout
-                </Button>
             </Box>
         </Box>
     );
